@@ -53,6 +53,19 @@ h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif
 .top-in{max-width:860px;margin:0 auto;padding:11px 14px 0}
 .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .brand h1{font-size:23px;line-height:1;text-transform:uppercase;letter-spacing:.045em}
+.pickwrap{position:relative;display:inline-flex;align-items:center}
+.pickwrap::after{content:"";position:absolute;right:8px;pointer-events:none;
+  width:0;height:0;border-left:4.5px solid transparent;border-right:4.5px solid transparent;
+  border-top:5px solid currentColor;opacity:.75}
+.pick{appearance:none;-webkit-appearance:none;cursor:pointer;
+  font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif;font-weight:600;font-size:23px;
+  line-height:1;text-transform:uppercase;letter-spacing:.045em;
+  color:inherit;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:8px;padding:4px 26px 5px 9px;max-width:62vw;
+  text-overflow:ellipsis;white-space:nowrap}
+.pick:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.pick option{color:#161A18;background:#FBFBF9;font-size:15px;text-transform:none;
+  font-family:"IBM Plex Sans",sans-serif}
 .brand .sub{font-size:11px;letter-spacing:.13em;text-transform:uppercase;opacity:.72}
 .synced{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.02em;
   padding:3px 9px 3px 8px;border-radius:11px;background:rgba(255,255,255,.13);
@@ -330,6 +343,7 @@ window.SUVERA_SYNC = {
     on: !!(CFG.url && CFG.key), rev: 0, busy: false, pending: false,
     touched: {}, lastOk: 0, state: "attesa", when: ""
   };
+  var CANTIERI = [];   // elenco per il menu a tendina, letto dall'archivio
 
   var GG = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
   var GGL = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
@@ -389,8 +403,18 @@ window.SUVERA_SYNC = {
     var nsc = scaduti().length;
     var tabs = [["day", "Giornata"], ["rec", "Recuperi"], ["firm", "Ditte"],
       ["iss", "Criticità"], ["trend", "Andamento"]];
+    var testa;
+    if (CANTIERI.length > 1) {
+      testa = '<div class="pickwrap"><select class="pick" data-act="cantiere" ' +
+        'aria-label="Cambia cantiere">' + CANTIERI.map(function (c) {
+          return '<option value="' + esc(c.url || "") + '"' +
+            (c.slug === CANTIERE ? " selected" : "") + ">" + esc(c.nome) + "</option>";
+        }).join("") + "</select></div>";
+    } else {
+      testa = "<h1>" + esc(NOME) + "</h1>";
+    }
     return '<header class="top"><div class="top-in">' +
-      '<div class="brand"><h1>' + esc(NOME) + "</h1>" +
+      '<div class="brand">' + testa +
       '<span class="sub">' + esc(LUOGO) + ' &middot; monitoraggio programma</span>' +
       (SY.on ? '<span class="synced s-' + SY.state + '">' + chipText() + "</span>" : "") +
       "</div>" +
@@ -733,7 +757,12 @@ window.SUVERA_SYNC = {
   });
 
   document.addEventListener("change", function (e) {
-    var el = e.target.closest("[data-act]"); if (!el || readOnly) return;
+    var el = e.target.closest("[data-act]"); if (!el) return;
+    if (el.dataset.act === "cantiere") {
+      if (el.value) location.href = el.value; else render(true);
+      return;
+    }
+    if (readOnly) return;
     var a = el.dataset.act, r = byId(el.dataset.id); if (!r) return;
     if (a === "cat") { r[R.CAT] = el.value; dirty++; }
     else if (a === "desc") { r[R.DESC] = el.value; dirty++; }
@@ -980,8 +1009,23 @@ window.SUVERA_SYNC = {
     el.textContent = chipText();
   }
 
+  function caricaCantieri() {
+    if (!SY.on) return;
+    api("cantieri?attivo=is.true&select=slug,nome,luogo,url&order=ordine.asc,nome.asc")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (list) {
+        if (!list || !list.length) return;
+        CANTIERI = list;
+        var mio = list.filter(function (c) { return c.slug === CANTIERE; })[0];
+        if (mio) { NOME = mio.nome || NOME; LUOGO = mio.luogo || LUOGO; }
+        render(true);
+      })
+      .catch(function () { /* elenco non disponibile: resta il solo cantiere corrente */ });
+  }
+
   function startSync() {
     if (!SY.on) return;
+    caricaCantieri();
     syncPull();
     setInterval(function () {
       if (document.hidden || SY.busy) return;
