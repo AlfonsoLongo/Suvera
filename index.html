@@ -262,6 +262,39 @@ table.data td:first-child{font-family:"IBM Plex Sans",sans-serif}
   .tiles{grid-template-columns:repeat(2,1fr)}
   .crow{grid-template-columns:56px 1fr 40px}
 }
+
+/* ---------- report stampabile ---------- */
+#report{display:none}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  body{background:#fff;color:#111;font-size:10pt}
+  .top,.wrap,.savebar,.toast,.alert{display:none !important}
+  #report{display:block;max-width:none;padding:0}
+  #report .rhead{display:flex;align-items:flex-start;justify-content:space-between;
+    border-bottom:2px solid #14403C;padding-bottom:8px;margin-bottom:14px}
+  #report h1{font-family:"Barlow Condensed",Arial,sans-serif;font-size:19pt;text-transform:uppercase;
+    letter-spacing:.03em;color:#14403C;margin:0}
+  #report .rhead p{margin:3px 0 0;font-size:10pt;color:#444}
+  #report .rkpi{text-align:right}
+  #report .rkpi b{display:block;font-size:26pt;line-height:1;color:#14403C;
+    font-family:"IBM Plex Mono",monospace}
+  #report .rkpi span{font-size:8pt;text-transform:uppercase;letter-spacing:.12em;color:#666}
+  #report h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:12pt;text-transform:uppercase;
+    letter-spacing:.09em;color:#14403C;margin:16px 0 5px;page-break-after:avoid}
+  #report table{width:100%;border-collapse:collapse;font-size:8.5pt}
+  #report th{background:#EDEFEA;text-align:left;padding:5px 6px;border:1px solid #C8CFC9;
+    font-family:"Barlow Condensed",Arial,sans-serif;font-size:8pt;text-transform:uppercase;
+    letter-spacing:.07em;color:#333}
+  #report td{padding:5px 6px;border:1px solid #D8DCD4;vertical-align:top}
+  #report tr{page-break-inside:avoid}
+  #report .rsum td{text-align:center;font-family:"IBM Plex Mono",monospace;font-size:12pt;font-weight:600}
+  #report .rsum th{text-align:center}
+  #report .pchi{color:#555;font-size:7.5pt}
+  #report .rnone{font-size:9.5pt;color:#555;margin:2px 0}
+  #report .rfirme{display:flex;gap:40mm;margin-top:16mm;font-size:9pt;color:#444}
+  #report .rfirme div{flex:1;border-top:1px solid #999;padding-top:4px}
+  #report .rfoot{margin-top:8mm;font-size:7.5pt;color:#777;border-top:1px solid #DDD;padding-top:4px}
+}
 </style>
 <div id="app"></div>
 <script id="sync-config">
@@ -404,7 +437,9 @@ window.SUVERA_SYNC = {
         (nsc === 1 ? " recupero scaduto" : " recuperi scaduti") +
         " &mdash; vedi la scheda Recuperi</button>";
     }
-    h += hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t);
+    h += hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t) +
+      '<div class="toolbar"><button data-act="print">Report della giornata (PDF)</button>' +
+      '<button data-act="csv">Esporta CSV</button></div>';
     if (!rs.length) return h + '<div class="card empty">Nessuna attività programmata in questa data.</div>';
     var byQ = {};
     rs.forEach(function (r) { (byQ[r[R.Q]] = byQ[r[R.Q]] || []).push(r); });
@@ -650,7 +685,7 @@ window.SUVERA_SYNC = {
             "da solo e lo vedono tutti quelli che hanno il link, entro pochi secondi."
           : "Generato dal programma bisettimanale del capocantiere. Quello che compili resta su " +
             "questo telefono. A fine giornata premi <b>Invia riepilogo</b>.") +
-      "</p></main>" + hSaveBar() +
+      "</p></main>" + (view.tab === "day" ? hReport() : "") + hSaveBar() +
       (saved ? '<div class="toast">' + (shared
         ? "Salvato &mdash; avanzamento aggiornato per tutti"
         : "Riepilogo pronto per l&rsquo;invio") + "</div>" : "");
@@ -685,6 +720,7 @@ window.SUVERA_SYNC = {
       dirty++; touch(rr); render(true);
     } else if (a === "table") { view.table = !view.table; render(true); }
     else if (a === "csv") { csv(); }
+    else if (a === "print") { window.print(); }
     else if (a === "wa") { sendReport(); }
     else if (a === "save") { save(); }
   });
@@ -950,40 +986,72 @@ window.SUVERA_SYNC = {
   }
 
   /* --- riepilogo di fine giornata --- */
+  function gruppi(rs) {
+    // accorpa le righe che raccontano lo stesso fatto (stessa ditta, attivita', causa, problema)
+    var map = {}, out = [];
+    rs.forEach(function (r) {
+      var k = [r[R.F], r[R.ST], r[R.A], r[R.Z], r[R.CAT], r[R.DESC], r[R.AZ], r[R.RD]].join("|");
+      if (!map[k]) { map[k] = { r: r, chi: [] }; out.push(map[k]); }
+      map[k].chi.push(S.ope[r[R.O]]);
+    });
+    return out;
+  }
+
+  function nomi(g) {
+    var n = g.chi.length;
+    if (n === 1) return g.chi[0];
+    return n + " uomini (" + g.chi.join(", ") + ")";
+  }
+
   function dayReport() {
     var d = S.days[view.day], rs = rowsOf(view.day), t = tally(rs);
-    var L = ["*LA SUVERA — " + ggl(d).toUpperCase() + " " + dmy(d) + "*"];
-    L.push("Avanzamento: " + (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") +
-      "  (eseguite " + t.ok + ", parziali " + t.part + ", non eseguite " + t.ko +
-      (t.idle ? ", da compilare " + t.idle : "") + " su " + t.base + ")");
-    var ko = rs.filter(function (r) { return r[R.ST] === "ko" || r[R.ST] === "part"; });
-    if (ko.length) {
+    var L = ["*LA SUVERA — " + ggl(d) + " " + dmy(d) + "*"];
+    L.push("Avanzamento " + (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") +
+      " su " + t.base + " attività");
+    L.push("Eseguite " + t.ok + " · Parziali " + t.part + " · Non eseguite " + t.ko +
+      (t.idle ? " · Da compilare " + t.idle : ""));
+
+    var ko = gruppi(rs.filter(function (r) { return r[R.ST] === "ko"; }));
+    var pa = gruppi(rs.filter(function (r) { return r[R.ST] === "part"; }));
+
+    var blocco = function (titolo, gs) {
+      if (!gs.length) return;
       L.push("");
-      L.push("*Da recuperare*");
-      ko.forEach(function (r) {
-        L.push("• " + S.ope[r[R.O]] + " (" + S.dit[r[R.F]] + ") — " + S.att[r[R.A]] +
-          " / " + S.zon[r[R.Z]] + " — " + STL[r[R.ST]].toUpperCase());
-        if (r[R.CAT]) L.push("   causa: " + r[R.CAT]);
-        if (r[R.DESC]) L.push("   problema: " + r[R.DESC]);
-        if (r[R.AZ]) L.push("   azione: " + r[R.AZ]);
+      L.push("*" + titolo + "*");
+      gs.forEach(function (g, i) {
+        var r = g.r;
+        L.push("");
+        L.push((i + 1) + ") " + S.dit[r[R.F]] + " — " + nomi(g));
+        L.push("   " + S.att[r[R.A]] + (S.zon[r[R.Z]] ? " — " + S.zon[r[R.Z]] : ""));
+        if (r[R.CAT]) L.push("   Causa: " + r[R.CAT]);
+        if (r[R.DESC]) L.push("   " + r[R.DESC]);
+        if (r[R.AZ]) L.push("   Azione: " + r[R.AZ]);
+        L.push("   Recupero entro: " + (r[R.RD] ? dmy(r[R.RD]) : "DA FISSARE"));
       });
-    }
+    };
+    blocco("NON ESEGUITE (" + t.ko + ")", ko);
+    blocco("PARZIALI (" + t.part + ")", pa);
+
     var ab = rs.filter(function (r) { return r[R.ST] === "abs"; });
-    if (ab.length) {
+    var tr = rs.filter(function (r) { return r[R.ST] === "trip"; });
+    if (ab.length || tr.length) {
       L.push("");
-      L.push("*Assenti*: " + ab.map(function (r) { return S.ope[r[R.O]]; }).join(", "));
+      L.push("*FUORI CANTIERE*");
+      if (ab.length) L.push("Assenti: " + ab.map(function (r) { return S.ope[r[R.O]]; }).join(", "));
+      if (tr.length) L.push("Trasferta: " + tr.map(function (r) { return S.ope[r[R.O]]; }).join(", "));
     }
+
     var sc = scaduti();
     if (sc.length) {
       L.push("");
-      L.push("*Recuperi scaduti*");
-      sc.forEach(function (r) {
-        L.push("• " + S.ope[r[R.O]] + " — " + S.att[r[R.A]] + " — era da recuperare entro " +
-          dmy(r[R.RD]) + " (" + (-giorniDa(r[R.RD])) + " gg fa)");
+      L.push("*RECUPERI SCADUTI (" + sc.length + ")*");
+      gruppi(sc).forEach(function (g) {
+        L.push("· " + S.dit[g.r[R.F]] + " — " + S.att[g.r[R.A]] + " — scaduto il " +
+          dmy(g.r[R.RD]) + " (" + (-giorniDa(g.r[R.RD])) + " gg)");
       });
     }
     var idle = rs.filter(function (r) { return !r[R.ST]; });
-    if (idle.length) L.push("", "Righe non compilate: " + idle.length);
+    if (idle.length) L.push("", "Righe non ancora compilate: " + idle.length);
     return L.join("\n");
   }
 
@@ -998,6 +1066,62 @@ window.SUVERA_SYNC = {
         encodeURIComponent("La Suvera " + dmy(S.days[view.day])) +
         "&body=" + encodeURIComponent(txt);
     }
+  }
+
+  /* --- report stampabile / PDF --- */
+  function hReport() {
+    var d = S.days[view.day], rs = rowsOf(view.day), t = tally(rs);
+    var riga = function (g) {
+      var r = g.r;
+      return "<tr><td>" + esc(S.dit[r[R.F]]) + "<br><span class='pchi'>" + esc(nomi(g)) +
+        "</span></td><td>" + esc(S.att[r[R.A]]) + "</td><td>" + esc(S.zon[r[R.Z]]) +
+        "</td><td>" + STL[r[R.ST]] + "</td><td>" + esc(r[R.CAT] || "—") + "</td><td>" +
+        esc(r[R.DESC] || "—") + "</td><td>" + esc(r[R.AZ] || "—") + "</td><td>" +
+        (r[R.RD] ? dmy(r[R.RD]) : "da fissare") + "</td></tr>";
+    };
+    var gs = gruppi(rs.filter(function (r) { return r[R.ST] === "ko" || r[R.ST] === "part"; }));
+    var ab = rs.filter(function (r) { return r[R.ST] === "abs" || r[R.ST] === "trip"; });
+    var sc = scaduti();
+
+    var h = '<div id="report"><div class="rhead"><div><h1>Cantiere La Suvera &mdash; Pievescola</h1>' +
+      "<p>Rapporto giornaliero delle attivit&agrave; &middot; " + ggl(d) + " " +
+      S.days[view.day].split("-").reverse().join("/") + "</p></div>" +
+      '<div class="rkpi"><b>' + (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") +
+      "</b><span>avanzamento</span></div></div>" +
+      '<table class="rsum"><tr><th>Programmate</th><th>Eseguite</th><th>Parziali</th>' +
+      "<th>Non eseguite</th><th>Fuori cantiere</th><th>Non compilate</th></tr><tr><td>" +
+      t.base + "</td><td>" + t.ok + "</td><td>" + t.part + "</td><td>" + t.ko + "</td><td>" +
+      t.out + "</td><td>" + t.idle + "</td></tr></table>";
+
+    if (gs.length) {
+      h += "<h2>Attivit&agrave; non eseguite e parziali</h2>" +
+        "<table class='rtab'><thead><tr><th>Ditta / risorse</th><th>Attivit&agrave;</th>" +
+        "<th>Zona</th><th>Esito</th><th>Causa</th><th>Problema rilevato</th>" +
+        "<th>Azione</th><th>Recupero</th></tr></thead><tbody>" +
+        gs.map(riga).join("") + "</tbody></table>";
+    } else {
+      h += "<h2>Attivit&agrave; non eseguite e parziali</h2><p class='rnone'>Nessuna: " +
+        "il programma della giornata &egrave; stato rispettato.</p>";
+    }
+    if (ab.length) {
+      h += "<h2>Fuori cantiere</h2><p>" + ab.map(function (r) {
+        return esc(S.ope[r[R.O]]) + " (" + esc(S.dit[r[R.F]]) + ") &mdash; " + STL[r[R.ST]].toLowerCase();
+      }).join(" &middot; ") + "</p>";
+    }
+    if (sc.length) {
+      h += "<h2>Recuperi scaduti</h2><table class='rtab'><thead><tr><th>Ditta</th>" +
+        "<th>Attivit&agrave;</th><th>Saltata il</th><th>Da recuperare entro</th><th>Ritardo</th>" +
+        "</tr></thead><tbody>" + gruppi(sc).map(function (g) {
+          var r = g.r;
+          return "<tr><td>" + esc(S.dit[r[R.F]]) + "</td><td>" + esc(S.att[r[R.A]]) +
+            "</td><td>" + dmy(S.days[r[R.D]]) + "</td><td>" + dmy(r[R.RD]) + "</td><td>" +
+            (-giorniDa(r[R.RD])) + " gg</td></tr>";
+        }).join("") + "</tbody></table>";
+    }
+    h += '<div class="rfirme"><div>Il capocantiere</div><div>La direzione tecnica</div></div>' +
+      '<p class="rfoot">Generato dal registro giornaliero del cantiere La Suvera. ' +
+      "I dati provengono dal programma bisettimanale e dal consuntivo compilato in cantiere.</p></div>";
+    return h;
   }
 
   function csv() {
