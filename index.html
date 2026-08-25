@@ -234,6 +234,10 @@ table.data td:first-child{font-family:"IBM Plex Sans",sans-serif}
   letter-spacing:.09em;text-transform:uppercase;padding:7px 11px;border-radius:6px;border:1px solid var(--line);
   background:var(--surface);color:var(--ink-2)}
 .issue .acts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.attesa{margin-top:26px;padding:26px 20px 24px;text-align:left}
+.attesa h2{font-size:19px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);margin-bottom:10px}
+.attesa p{margin:0 0 10px;font-size:14px;line-height:1.5;color:var(--ink-2);max-width:56ch}
+.attesa p:last-child{margin-bottom:0;color:var(--ink-3)}
 .empty{padding:26px 14px;text-align:center;color:var(--ink-3);font-size:13.5px}
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 2px}
 .toolbar button{appearance:none;cursor:pointer;font:600 11px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.1em;
@@ -399,7 +403,7 @@ window.SUVERA_SYNC = {
   }
 
   /* ------------------------------------------------ header */
-  function hTop() {
+  function hTop(vuoto) {
     var nsc = scaduti().length;
     var tabs = [["day", "Giornata"], ["rec", "Recuperi"], ["firm", "Ditte"],
       ["iss", "Criticità"], ["trend", "Andamento"]];
@@ -418,11 +422,11 @@ window.SUVERA_SYNC = {
       '<span class="sub">' + esc(LUOGO) + ' &middot; monitoraggio programma</span>' +
       (SY.on ? '<span class="synced s-' + SY.state + '">' + chipText() + "</span>" : "") +
       "</div>" +
-      '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
+      (vuoto ? "" : '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
         return '<button class="tab" role="tab" data-tab="' + t[0] + '" aria-selected="' +
           (view.tab === t[0]) + '">' + t[1] +
           (t[0] === "rec" && nsc ? '<span class="badge">' + nsc + "</span>" : "") + "</button>";
-      }).join("") + "</nav></div></header>";
+      }).join("") + "</nav>") + "</div></header>";
   }
 
   function hDays() {
@@ -698,9 +702,25 @@ window.SUVERA_SYNC = {
       '<button data-act="wa">Invia riepilogo</button></div></div>';
   }
 
+  function hVuoto() {
+    return '<div class="card attesa"><h2>Programma non ancora caricato</h2>' +
+      "<p>Il registro di questo cantiere &egrave; pronto e collegato all&rsquo;archivio. " +
+      "Appena arriva il programma settimanale del capocantiere viene caricato qui, " +
+      "e da quel momento si potr&agrave; compilare il consuntivo come sugli altri cantieri.</p>" +
+      (CANTIERI.length > 1
+        ? "<p>Nel frattempo puoi passare a un altro cantiere dal menu in alto.</p>"
+        : "") + "</div>";
+  }
+
   /* ------------------------------------------------ shell */
   function render(keepScroll) {
     var y = window.scrollY;
+    var vuoto = !S.days.length || !S.rows.length;
+    if (vuoto) {
+      app.innerHTML = hTop(true) + '<main class="wrap">' + hVuoto() + "</main>";
+      if (keepScroll) window.scrollTo(0, y);
+      return;
+    }
     var body = view.tab === "day" ? hDay() : view.tab === "rec" ? hRec() :
       view.tab === "firm" ? hFirm() : view.tab === "iss" ? hIss() : hTrend();
     app.innerHTML = hTop() + '<main class="wrap">' +
