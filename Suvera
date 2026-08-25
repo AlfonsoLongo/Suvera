@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14403C">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Cantiere La Suvera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+</head>
+<body>
+<style id="app-css">*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ground:#F2F3F0; --surface:#FBFBF9; --surface-2:#EDEFEA; --line:#D8DCD4; --line-soft:#E5E8E1;
+  --ink:#161A18; --ink-2:#4A524E; --ink-3:#79817C;
+  --accent:#14403C; --accent-ink:#FBFBF9; --accent-soft:#DCE6E2;
+  --top-bg:#14403C; --top-ink:#F2F6F3;
+  --ok:#2F7A4F; --part:#2C6FA8; --ko:#B3261E; --idle:#8A9296;
+  --ok-bg:#E4F0E8; --part-bg:#E1ECF6; --ko-bg:#F8E3E1; --idle-bg:#EAECE8;
+  --shadow:0 1px 2px rgba(20,30,26,.06),0 8px 24px rgba(20,30,26,.05);
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#101312; --surface:#181C1A; --surface-2:#1F2422; --line:#2C3330; --line-soft:#242A28;
+  --ink:#EDEFEB; --ink-2:#A9B2AD; --ink-3:#78827D;
+  --accent:#8FC7B8; --accent-ink:#0C1614; --accent-soft:#20302C;
+  --top-bg:#16211F; --top-ink:#CFE6DE;
+  --ok:#4FA873; --part:#4E92CC; --ko:#E0574E; --idle:#7F8A85;
+  --ok-bg:#1B2A22; --part-bg:#182530; --ko-bg:#2E1D1B; --idle-bg:#212624;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --ground:#101312; --surface:#181C1A; --surface-2:#1F2422; --line:#2C3330; --line-soft:#242A28;
+  --ink:#EDEFEB; --ink-2:#A9B2AD; --ink-3:#78827D;
+  --accent:#8FC7B8; --accent-ink:#0C1614; --accent-soft:#20302C;
+  --top-bg:#16211F; --top-ink:#CFE6DE;
+  --ok:#4FA873; --part:#4E92CC; --ko:#E0574E; --idle:#7F8A85;
+  --ok-bg:#1B2A22; --part-bg:#182530; --ko-bg:#2E1D1B; --idle-bg:#212624;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif;font-weight:600;
+  letter-spacing:.01em;text-wrap:balance}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 120px}
+
+/* ---------- top ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--top-bg);color:var(--top-ink)}
+.top-in{max-width:860px;margin:0 auto;padding:11px 14px 0}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:23px;line-height:1;text-transform:uppercase;letter-spacing:.045em}
+.brand .sub{font-size:11px;letter-spacing:.13em;text-transform:uppercase;opacity:.72}
+.synced{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.02em;
+  padding:3px 9px 3px 8px;border-radius:11px;background:rgba(255,255,255,.13);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.synced::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.synced.s-ok{color:#8FDDB0} .synced.s-invio{color:#F2D08A}
+.synced.s-ko{color:#FFA9A2} .synced.s-attesa{color:rgba(255,255,255,.6)}
+.tabs{display:flex;gap:2px;margin-top:11px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;appearance:none;background:none;border:0;color:inherit;opacity:.62;cursor:pointer;
+  font:600 12px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 10px;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{opacity:1;border-bottom-color:currentColor}
+.tab:focus-visible{outline:2px solid currentColor;outline-offset:-4px}
+
+/* ---------- day strip ---------- */
+.daystrip{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none;
+  scroll-snap-type:x proximity}
+.daystrip::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;scroll-snap-align:start;appearance:none;cursor:pointer;text-align:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:7px 10px 6px;min-width:56px;color:var(--ink-2);font:inherit}
+.day .dw{font:600 10px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.day .dn{font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:600;line-height:1.25;color:var(--ink)}
+.day .bar{height:3px;border-radius:2px;background:var(--line);margin-top:5px;overflow:hidden}
+.day .bar i{display:block;height:100%;background:var(--ok)}
+.day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);box-shadow:var(--shadow)}
+.day[aria-pressed="true"] .dn,.day[aria-pressed="true"] .dw{color:var(--accent-ink)}
+.day[aria-pressed="true"] .bar{background:rgba(255,255,255,.28)}
+.day.wknd .dn{color:var(--ink-3)}
+.day:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- cards / tiles ---------- */
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);box-shadow:var(--shadow)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.tile{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:9px 8px 8px;
+  border-top:3px solid var(--idle)}
+.tile.ok{border-top-color:var(--ok)} .tile.part{border-top-color:var(--part)}
+.tile.ko{border-top-color:var(--ko)} .tile.idle{border-top-color:var(--idle)}
+.tile b{display:block;font-family:"IBM Plex Mono",monospace;font-size:21px;font-weight:600;line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.tile span{display:block;font-size:10px;line-height:1.25;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+.meter{display:flex;align-items:center;gap:11px;padding:11px 13px;margin-bottom:12px}
+.meter .pct{font-family:"IBM Plex Mono",monospace;font-size:27px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.meter .lab{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.track{flex:1;height:9px;border-radius:5px;background:var(--surface-2);overflow:hidden;display:flex;gap:2px}
+.track i{display:block;height:100%}
+.track i.ok{background:var(--ok)} .track i.part{background:var(--part)}
+.track i.ko{background:var(--ko)} .track i.idle{background:var(--idle);opacity:.32}
+
+/* ---------- squad group ---------- */
+.grp{margin-top:16px}
+.grp>h2{display:flex;align-items:center;gap:9px;font-size:14px;text-transform:uppercase;letter-spacing:.11em;
+  color:var(--ink-2);padding-bottom:6px;border-bottom:1px solid var(--line)}
+.grp>h2 .n{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);font-weight:400;letter-spacing:0}
+.row{margin-top:8px;padding:11px 12px 10px}
+.row .who{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.row .name{font-weight:600;font-size:14px}
+.row .firm{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.row .task{margin-top:3px;font-size:14px;color:var(--ink);line-height:1.35}
+.row .zone{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.03em;color:var(--ink-2);background:var(--surface-2);border-radius:4px;padding:2px 7px}
+.row .rid{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);margin-left:8px}
+.row .zoneline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:6px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px}
+.seg button{appearance:none;cursor:pointer;font:600 11px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.08em;
+  text-transform:uppercase;padding:9px 4px;border-radius:7px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg button .g{display:block;font-size:13px;line-height:1;margin-bottom:3px}
+.seg button[aria-pressed="true"]{color:#fff;border-color:transparent}
+.seg button.b-ok[aria-pressed="true"]{background:var(--ok)}
+.seg button.b-part[aria-pressed="true"]{background:var(--part)}
+.seg button.b-ko[aria-pressed="true"]{background:var(--ko)}
+.seg button.b-abs[aria-pressed="true"]{background:var(--idle)}
+:root[data-theme="dark"] .seg button[aria-pressed="true"],
+:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:var(--accent-ink)}
+.row.s-ok{border-left:3px solid var(--ok)}
+.row.s-part{border-left:3px solid var(--part)}
+.row.s-ko{border-left:3px solid var(--ko)}
+.row.s-abs,.row.s-trip{border-left:3px solid var(--idle);opacity:.78}
+.row.s-none{border-left:3px dashed var(--line)}
+.detail{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);display:grid;gap:7px}
+.detail label{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.detail select,.detail textarea{width:100%;font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:7px;padding:8px 9px;resize:vertical}
+.detail textarea{min-height:52px}
+.detail select:focus,.detail textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.tag{display:inline-block;font:600 9.5px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;padding:3px 6px;border-radius:4px;background:var(--idle-bg);color:var(--ink-2)}
+.tag.ko{background:var(--ko-bg);color:var(--ko)} .tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.part{background:var(--part-bg);color:var(--part)}
+
+/* ---------- save bar ---------- */
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--accent);color:var(--accent-ink);
+  transform:translateY(105%);transition:transform .18s ease}
+.savebar.on{transform:none}
+@media (prefers-reduced-motion:reduce){.savebar{transition:none}}
+.savebar-in{max-width:860px;margin:0 auto;padding:11px 14px calc(11px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px}
+.savebar p{margin:0;font-size:12.5px;flex:1}
+.savebar button{appearance:none;cursor:pointer;border:0;border-radius:8px;padding:10px 18px;
+  background:var(--accent-ink);color:var(--accent);font:600 13px/1 "Barlow Condensed",Arial,sans-serif;
+  letter-spacing:.11em;text-transform:uppercase}
+.savebar button[disabled]{opacity:.55;cursor:default}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:70;
+  background:var(--ok);color:#fff;border-radius:20px;padding:9px 18px;font-size:12.5px;
+  box-shadow:0 6px 20px rgba(0,0,0,.22);max-width:92vw;text-align:center}
+:root[data-theme="dark"] .toast,:root:not([data-theme="light"]) .toast{color:#0C1614}
+.notice{margin:12px 0;padding:10px 12px;border-radius:var(--r);font-size:12.5px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.notice.warn{background:var(--ko-bg);border-color:var(--ko);color:var(--ko)}
+
+/* ---------- chart ---------- */
+.chart{padding:14px 13px 10px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-2)}
+.legend i{width:11px;height:11px;border-radius:3px;display:block}
+.crow{display:grid;grid-template-columns:64px 1fr 44px;align-items:center;gap:9px;padding:3px 0}
+.crow .cl{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.crow .cv{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.cbar{display:flex;gap:2px;height:17px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.cbar i{display:block;height:100%;border-radius:2px}
+.cbar i.idle{background:var(--idle)}
+.crow.today .cl{color:var(--ink);font-weight:600}
+table.data{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+table.data th,table.data td{text-align:right;padding:5px 7px;border-bottom:1px solid var(--line-soft)}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th{font:600 10px/1.3 "Barlow Condensed",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+table.data td{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+table.data td:first-child{font-family:"IBM Plex Sans",sans-serif}
+.scrollx{overflow-x:auto}
+
+/* ---------- issues ---------- */
+.issue{padding:12px 13px;margin-top:9px;border-left:3px solid var(--ko)}
+.issue.closed{border-left-color:var(--ok);opacity:.7}
+.issue.mid{border-left-color:var(--part)}
+.issue h3{font-size:15px;line-height:1.3}
+.issue .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.issue dl{margin:9px 0 0;display:grid;grid-template-columns:auto 1fr;gap:3px 11px;font-size:13px}
+.issue dt{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);padding-top:3px}
+.issue dd{margin:0}
+.issue .acts{display:flex;gap:5px;margin-top:10px}
+.issue .acts button{appearance:none;cursor:pointer;font:600 10.5px/1 "Barlow Condensed",Arial,sans-serif;
+  letter-spacing:.09em;text-transform:uppercase;padding:7px 11px;border-radius:6px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+.issue .acts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.empty{padding:26px 14px;text-align:center;color:var(--ink-3);font-size:13.5px}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0 2px}
+.toolbar button{appearance:none;cursor:pointer;font:600 11px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.1em;
+  text-transform:uppercase;padding:8px 12px;border-radius:7px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+.toolbar button:focus-visible,.issue .acts button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.sectionhead{margin:20px 0 2px;font-size:15px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2)}
+.foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3)}
+@media (max-width:420px){
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .crow{grid-template-columns:56px 1fr 40px}
+}
+</style>
+<div id="app"></div>
+<script id="sync-config">
+/* ====== ARCHIVIO CONDIVISO ======================================
+   Finche' queste due righe restano vuote la pagina funziona da sola
+   sul singolo telefono. Incollando i due valori di Supabase diventa
+   condivisa: chi compila aggiorna, gli altri vedono entro 8 secondi.
+   ============================================================== */
+window.SUVERA_SYNC = {
+  url: "https://yavlfpvnchkjobtywqkh.supabase.co",   /* es. https://abcdefghij.supabase.co */
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhdmxmcHZuY2hram9idHl3cWtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzU5MjIsImV4cCI6MjEwMzIxMTkyMn0.c59JIgkMoT2Fm7cH5dFRLyDT6-r6voNE9cSHnAZczHg"    /* la chiave "anon public" del progetto */
+};
+</script>
+<script id="state" type="application/json">{"days":["2026-08-24","2026-08-25","2026-08-26","2026-08-27","2026-08-28","2026-08-29","2026-08-30","2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06"],"dit":["QUALITY SERVICE","RICCI","PITTURE EDILI","JLL2002","EDILKOTRA","ARCHEOLOGA","P&P DI PAGNANELLI","EDIL EG","PETTINELLI"],"ope":["AMICIZIA CESARE","IBRAHIM WAEL MOHAMED ELBASSIOUNI","CARTONGESSI 1","CARTONGESSI 2","CARTONGESSI 3","CARTONGESSI 4","SERBAN FLORENTIN","GUEYE SERIGNE","TALEL BENAISSA","GADELRAB (FRA MIMMO) ALAA MOHAMED EL B.","GADELRAB MIMMO MOHAMED ABDELGAYED","DELLE DONNE STEFANO","POSSIDENTE ALESSANDRO","DYLIA ALTIN","DEL VESCOVO ULISSE","PONTEGGI 1","PONTEGGI 2","PONTEGGI 3","ELEONORA IACOPINI","LEONI MARINO","PAGNANELLI TOMMASO","BALLAN SORIN","CORRENTI FONTANA ROBERTO","MARENA IBRAHIMA","MARINI NICCOLO","STAMA PASTOLICA","PETTINELLI","PARFENE SORIN","JLL2002 2"],"squ":["Assistenze impianti","Cartongessi","Copertura / impermeabilizzazione","Demolizioni 1","Demolizioni 2","Gru e assistenza","Opere strutturali JLL","Ponteggi","Scavi e archeologia","Strutture e massetti","Trattamento travi"],"att":["ASSISTENZE IMPIANTI","REALIZZAZIONE NICCHIA","PARETI PRIMA FASE PARETI MANCANTI","IMPERMEABILIZZAZIONE","DEMOLIZIONE PAVIMENTI","DEMOLIZIONE PAVIMENTI O / AIUTO IMPERMEABILIZZAZIONE","DEMOLIZIONE SOFFITTI","ASSISTENZA CON GRU","ROMA","SMONTAGGIO SOTTOPONTE","ASSISTENZA AGLI SCAVI","SCAVO ELETTRICO ENEL","CORDOLO PERIMETRALE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO)","ASSENTE","TRATTAMENTO TRAVI","SCAVO ELETTRICO E MECCANICO","CORDOLO PERIMETRALE (MATTINA) / MASSETTO CORRIDOIO (POMERIGGIO)","PARETI PRIMA FASE","DEMOLIZIONE PAVIMENTI / POSA CAVIDOTTI","DEMOLIZIONE PARETI","MONTAGGIO PONTEGGIO","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA APELLE (POM)","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA ANDREINA (POM)","MILANO","CHUSURA SECONDA FASE E STUCCATURA","IMPERMEABILIZZAZIONE / POSA TEGOLE","DEMOLIZIONE PAV E MASSETTO","DEMOLIZIONE PAVIMENTI /","PREPARAZIONE FONDAZIONE ASCENSORE","ALL'OCCORRENZA ALA COME AIUTANTE","IISOLANTE (MATTINA) / MASSETTO STANZA PT(POMERIGGIO)","PREPARAZIONE SOLAI","IISOLANTE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO) DOVE DEOLITO PAVIMENTO AD ESCUSIONE DEI BAGNI","DEMOLIZIONE SOLAIO","GETTO MAGRONE CUNICOLO","TAVOLATO IN LEGNO (MATTINA) / MASSETTO TERRAZZO (POMERIGGIO)","PREPARAZIONE PARETI CUNICOLO","TAVOLATO IN LEGNO (MATTINA) /"],"zon":["FATTORIA","SPECTRE","MANICA","VILLA","OLIVIERA P1","OLIVIERA P1 / VILLA","OLIVIERA FINE","TUTTI","—","BAR LIMONI","STRADA SUP","BAR LIMONI / SCUDERIA P1","VILLA P2","FATTORIA PT","OLIVIERA","BAR LIMONI / SCUDERIA PT","VILLA P3","SCUDERIA","VILLA PT","BAR LIMONI / MANICA","BAR LIMONI / FATTORIA P1","BAR LIMONI / MANICA TERRAZZO","BAR LIMONI /"],"rows":[["R0001",0,0,0,0,0,0,"ok","","",""],["R0002",0,1,1,0,0,0,"ok","","",""],["R0003",0,2,2,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento"],["R0004",0,2,3,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento"],["R0005",0,2,4,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08"],["R0006",0,2,5,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08"],["R0007",0,1,6,2,3,3,"ko","MANODOPERA","Florentin non e' partito da Roma: ancora impegnato al cantiere Vergini - effetto: ritardo critico sull'impermeabilizzazione","Contattato il DTC Vergini F. Ricci: partenza concordata per giovedi'"],["R0008",0,0,7,3,4,4,"ok","","",""],["R0009",0,0,8,3,4,4,"ok","","",""],["R0010",0,1,9,3,4,4,"ok","","",""],["R0011",0,1,10,3,5,5,"part","MANODOPERA","Non ha potuto fare assistenza all'impermeabilizzazione perche' Florentin non era presente - effetto: ritardo critico sull'impermeabilizzazione","Oltre alla demolizione pavimento ha eseguito assistenza tracce, massetto e assistenza bobcat"],["R0012",0,0,11,4,6,6,"ok","","",""],["R0013",0,0,12,4,6,6,"ok","","",""],["R0014",0,1,13,5,7,7,"ok","","",""],["R0015",0,3,14,6,8,8,"trip","","",""],["R0016",0,4,15,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0017",0,4,16,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0018",0,4,17,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0019",0,5,18,8,10,10,"ok","","",""],["R0020",0,6,19,8,11,10,"ok","","",""],["R0021",0,6,20,8,11,10,"ok","","",""],["R0022",0,7,21,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0023",0,7,22,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0024",0,7,23,9,13,8,"abs","","",""],["R0025",0,7,24,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0026",0,7,25,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0027",0,8,26,10,14,0,"part","MATERIALI / FORNITURE","Materiale non adeguato: servono un altro trabattello, un compressore e altre attrezzature","Recupero dal 25/08"],["R0028",1,0,0,0,0,0,"","","",""],["R0029",1,1,1,0,0,0,"","","",""],["R0030",1,2,2,1,2,0,"","","",""],["R0031",1,2,3,1,2,0,"","","",""],["R0032",1,2,4,1,2,0,"","","",""],["R0033",1,2,5,1,2,0,"","","",""],["R0034",1,1,6,2,3,3,"","","",""],["R0035",1,0,7,3,4,4,"","","",""],["R0036",1,0,8,3,4,4,"","","",""],["R0037",1,1,9,3,4,4,"","","",""],["R0038",1,1,10,3,5,4,"","","",""],["R0039",1,0,11,4,6,6,"","","",""],["R0040",1,0,12,4,6,6,"","","",""],["R0041",1,1,13,5,7,7,"","","",""],["R0042",1,3,14,6,8,8,"trip","","",""],["R0043",1,4,15,7,9,9,"","","",""],["R0044",1,4,16,7,9,9,"","","",""],["R0045",1,4,17,7,9,9,"","","",""],["R0046",1,5,18,8,10,10,"","","",""],["R0047",1,6,19,8,15,10,"","","",""],["R0048",1,6,20,8,15,10,"","","",""],["R0049",1,7,21,9,16,11,"","","",""],["R0050",1,7,22,9,16,11,"","","",""],["R0051",1,7,23,9,13,8,"abs","","",""],["R0052",1,7,24,9,16,11,"","","",""],["R0053",1,7,25,9,16,11,"","","",""],["R0054",1,8,26,10,14,0,"","","",""],["R0055",2,0,0,0,0,0,"","","",""],["R0056",2,1,1,0,0,0,"","","",""],["R0057",2,2,2,1,17,12,"","","",""],["R0058",2,2,3,1,17,12,"","","",""],["R0059",2,2,4,1,17,12,"","","",""],["R0060",2,2,5,1,17,12,"","","",""],["R0061",2,1,6,2,3,3,"","","",""],["R0062",2,0,7,3,4,4,"","","",""],["R0063",2,0,8,3,4,4,"","","",""],["R0064",2,1,9,3,18,13,"","","",""],["R0065",2,1,10,3,5,13,"","","",""],["R0066",2,0,11,4,19,6,"","","",""],["R0067",2,0,12,4,19,6,"","","",""],["R0068",2,1,13,5,7,7,"","","",""],["R0069",2,3,14,6,8,8,"trip","","",""],["R0070",2,4,15,7,20,14,"","","",""],["R0071",2,4,16,7,20,14,"","","",""],["R0072",2,4,17,7,20,14,"","","",""],["R0073",2,5,18,8,10,10,"","","",""],["R0074",2,6,19,8,15,10,"","","",""],["R0075",2,6,20,8,15,10,"","","",""],["R0076",2,7,21,9,16,15,"","","",""],["R0077",2,7,22,9,16,15,"","","",""],["R0078",2,7,23,9,13,8,"abs","","",""],["R0079",2,7,24,9,16,15,"","","",""],["R0080",2,7,25,9,16,15,"","","",""],["R0081",2,8,26,10,14,0,"","","",""],["R0082",3,0,0,0,0,0,"","","",""],["R0083",3,1,1,0,0,0,"","","",""],["R0084",3,2,2,1,17,12,"","","",""],["R0085",3,2,3,1,17,12,"","","",""],["R0086",3,2,4,1,17,12,"","","",""],["R0087",3,2,5,1,17,12,"","","",""],["R0088",3,1,6,2,3,3,"","","",""],["R0089",3,0,7,3,4,4,"","","",""],["R0090",3,0,8,3,4,4,"","","",""],["R0091",3,1,9,3,18,13,"","","",""],["R0092",3,1,10,3,5,13,"","","",""],["R0093",3,0,11,4,19,6,"","","",""],["R0094",3,0,12,4,19,6,"","","",""],["R0095",3,1,13,5,7,7,"","","",""],["R0096",3,3,14,6,8,8,"trip","","",""],["R0097",3,4,15,7,20,14,"","","",""],["R0098",3,4,16,7,20,14,"","","",""],["R0099",3,4,17,7,20,14,"","","",""],["R0100",3,5,18,8,10,10,"","","",""],["R0101",3,6,19,8,15,10,"","","",""],["R0102",3,6,20,8,15,10,"","","",""],["R0103",3,7,21,9,21,15,"","","",""],["R0104",3,7,22,9,21,15,"","","",""],["R0105",3,7,23,9,13,8,"abs","","",""],["R0106",3,7,24,9,21,15,"","","",""],["R0107",3,7,25,9,21,15,"","","",""],["R0108",3,8,26,10,14,0,"","","",""],["R0109",4,0,0,0,0,0,"","","",""],["R0110",4,1,1,0,0,0,"","","",""],["R0111",4,2,2,1,17,16,"","","",""],["R0112",4,2,3,1,17,16,"","","",""],["R0113",4,2,4,1,17,16,"","","",""],["R0114",4,2,5,1,17,16,"","","",""],["R0115",4,1,6,2,3,3,"","","",""],["R0116",4,0,7,3,4,4,"","","",""],["R0117",4,0,8,3,4,4,"","","",""],["R0118",4,1,9,3,18,13,"","","",""],["R0119",4,1,10,3,5,13,"","","",""],["R0120",4,0,11,4,4,6,"","","",""],["R0121",4,0,12,4,4,6,"","","",""],["R0122",4,1,13,5,7,7,"","","",""],["R0123",4,3,14,6,8,8,"trip","","",""],["R0124",4,4,15,7,20,14,"","","",""],["R0125",4,4,16,7,20,14,"","","",""],["R0126",4,4,17,7,20,14,"","","",""],["R0127",4,5,18,8,10,10,"","","",""],["R0128",4,6,19,8,11,10,"","","",""],["R0129",4,6,20,8,11,10,"","","",""],["R0130",4,7,21,9,22,15,"","","",""],["R0131",4,7,22,9,22,15,"","","",""],["R0132",4,7,23,9,13,8,"abs","","",""],["R0133",4,7,24,9,22,15,"","","",""],["R0134",4,7,25,9,22,15,"","","",""],["R0135",4,8,26,10,14,0,"","","",""],["R0136",5,0,0,0,0,0,"","","",""],["R0137",5,1,1,0,23,8,"trip","","",""],["R0138",5,0,7,3,4,4,"","","",""],["R0139",5,0,8,3,4,4,"","","",""],["R0140",5,1,9,3,23,8,"trip","","",""],["R0141",5,1,10,3,23,8,"trip","","",""],["R0142",5,0,11,4,4,6,"","","",""],["R0143",5,0,12,4,4,6,"","","",""],["R0144",5,1,13,5,23,8,"trip","","",""],["R0145",6,0,0,0,0,0,"","","",""],["R0146",6,1,1,0,23,8,"trip","","",""],["R0147",6,0,7,3,4,4,"","","",""],["R0148",6,0,8,3,4,4,"","","",""],["R0149",6,1,9,3,23,8,"trip","","",""],["R0150",6,1,10,3,23,8,"trip","","",""],["R0151",6,0,11,4,4,6,"","","",""],["R0152",6,0,12,4,4,6,"","","",""],["R0153",6,1,13,5,23,7,"trip","","",""],["R0154",7,0,0,0,0,0,"","","",""],["R0155",7,1,1,0,0,0,"","","",""],["R0156",7,2,2,1,24,17,"","","",""],["R0157",7,2,3,1,24,17,"","","",""],["R0158",7,2,4,1,24,17,"","","",""],["R0159",7,2,5,1,24,17,"","","",""],["R0160",7,1,27,2,25,3,"","","",""],["R0161",7,1,6,2,25,3,"","","",""],["R0162",7,0,7,3,26,2,"","","",""],["R0163",7,0,8,3,26,2,"","","",""],["R0164",7,1,9,3,18,4,"","","",""],["R0165",7,1,10,3,27,4,"","","",""],["R0166",7,0,11,4,26,2,"","","",""],["R0167",7,0,12,4,26,2,"","","",""],["R0168",7,1,13,5,7,7,"","","",""],["R0169",7,3,14,6,28,18,"","","",""],["R0170",7,3,28,6,29,8,"","","",""],["R0171",7,4,15,7,20,14,"","","",""],["R0172",7,4,16,7,20,14,"","","",""],["R0173",7,4,17,7,20,14,"","","",""],["R0174",7,5,18,8,10,10,"","","",""],["R0175",7,6,19,8,11,10,"","","",""],["R0176",7,6,20,8,11,10,"","","",""],["R0177",7,7,21,9,30,19,"","","",""],["R0178",7,7,22,9,30,19,"","","",""],["R0179",7,7,23,9,13,8,"abs","","",""],["R0180",7,7,24,9,30,19,"","","",""],["R0181",7,7,25,9,30,19,"","","",""],["R0182",7,8,26,10,14,0,"","","",""],["R0183",8,0,0,0,0,0,"","","",""],["R0184",8,1,1,0,0,0,"","","",""],["R0185",8,2,2,1,24,17,"","","",""],["R0186",8,2,3,1,24,17,"","","",""],["R0187",8,2,4,1,24,17,"","","",""],["R0188",8,2,5,1,24,17,"","","",""],["R0189",8,1,27,2,25,3,"","","",""],["R0190",8,1,6,2,25,3,"","","",""],["R0191",8,0,7,3,26,2,"","","",""],["R0192",8,0,8,3,26,2,"","","",""],["R0193",8,1,9,3,18,4,"","","",""],["R0194",8,1,10,3,18,4,"","","",""],["R0195",8,0,11,4,26,2,"","","",""],["R0196",8,0,12,4,26,2,"","","",""],["R0197",8,1,13,5,7,7,"","","",""],["R0198",8,3,14,6,31,18,"","","",""],["R0199",8,3,28,6,29,8,"","","",""],["R0200",8,4,15,7,20,0,"","","",""],["R0201",8,4,16,7,20,0,"","","",""],["R0202",8,4,17,7,20,0,"","","",""],["R0203",8,5,18,8,10,10,"","","",""],["R0204",8,6,19,8,15,10,"","","",""],["R0205",8,6,20,8,15,10,"","","",""],["R0206",8,7,21,9,32,20,"","","",""],["R0207",8,7,22,9,32,20,"","","",""],["R0208",8,7,23,9,13,8,"abs","","",""],["R0209",8,7,24,9,32,20,"","","",""],["R0210",8,7,25,9,32,20,"","","",""],["R0211",8,8,26,10,14,0,"","","",""],["R0212",9,0,0,0,0,3,"","","",""],["R0213",9,1,1,0,0,3,"","","",""],["R0214",9,2,2,1,24,17,"","","",""],["R0215",9,2,3,1,24,17,"","","",""],["R0216",9,2,4,1,24,17,"","","",""],["R0217",9,2,5,1,24,17,"","","",""],["R0218",9,1,27,2,25,3,"","","",""],["R0219",9,1,6,2,25,3,"","","",""],["R0220",9,0,7,3,33,4,"","","",""],["R0221",9,0,8,3,33,4,"","","",""],["R0222",9,1,9,3,18,13,"","","",""],["R0223",9,1,10,3,18,13,"","","",""],["R0224",9,0,11,4,33,4,"","","",""],["R0225",9,0,12,4,33,4,"","","",""],["R0226",9,1,13,5,7,7,"","","",""],["R0227",9,3,14,6,34,0,"","","",""],["R0228",9,3,28,6,29,8,"","","",""],["R0229",9,4,15,7,20,0,"","","",""],["R0230",9,4,16,7,20,0,"","","",""],["R0231",9,4,17,7,20,0,"","","",""],["R0232",9,5,18,8,10,10,"","","",""],["R0233",9,6,19,8,15,10,"","","",""],["R0234",9,6,20,8,15,10,"","","",""],["R0235",9,7,21,9,35,21,"","","",""],["R0236",9,7,22,9,35,21,"","","",""],["R0237",9,7,23,9,13,8,"abs","","",""],["R0238",9,7,24,9,35,21,"","","",""],["R0239",9,7,25,9,35,21,"","","",""],["R0240",9,8,26,10,14,0,"","","",""],["R0241",10,0,0,0,0,3,"","","",""],["R0242",10,1,1,0,0,3,"","","",""],["R0243",10,2,2,1,24,17,"","","",""],["R0244",10,2,3,1,24,17,"","","",""],["R0245",10,2,4,1,24,17,"","","",""],["R0246",10,2,5,1,24,17,"","","",""],["R0247",10,1,27,2,25,3,"","","",""],["R0248",10,1,6,2,25,3,"","","",""],["R0249",10,0,7,3,33,4,"","","",""],["R0250",10,0,8,3,33,4,"","","",""],["R0251",10,1,9,3,4,13,"","","",""],["R0252",10,1,10,3,18,13,"","","",""],["R0253",10,0,11,4,33,4,"","","",""],["R0254",10,0,12,4,33,4,"","","",""],["R0255",10,1,13,5,7,7,"","","",""],["R0256",10,3,14,6,36,0,"","","",""],["R0257",10,3,28,6,29,8,"","","",""],["R0258",10,4,15,7,20,0,"","","",""],["R0259",10,4,16,7,20,0,"","","",""],["R0260",10,4,17,7,20,0,"","","",""],["R0261",10,5,18,8,10,10,"","","",""],["R0262",10,6,19,8,15,10,"","","",""],["R0263",10,6,20,8,15,10,"","","",""],["R0264",10,7,21,9,35,21,"","","",""],["R0265",10,7,22,9,35,21,"","","",""],["R0266",10,7,23,9,13,8,"abs","","",""],["R0267",10,7,24,9,35,21,"","","",""],["R0268",10,7,25,9,35,21,"","","",""],["R0269",10,8,26,10,14,0,"","","",""],["R0270",11,0,0,0,0,3,"","","",""],["R0271",11,1,1,0,0,3,"","","",""],["R0272",11,2,2,1,24,17,"","","",""],["R0273",11,2,3,1,24,17,"","","",""],["R0274",11,2,4,1,24,17,"","","",""],["R0275",11,2,5,1,24,17,"","","",""],["R0276",11,1,27,2,25,3,"","","",""],["R0277",11,1,6,2,25,3,"","","",""],["R0278",11,0,7,3,33,4,"","","",""],["R0279",11,0,8,3,33,4,"","","",""],["R0280",11,1,9,3,4,13,"","","",""],["R0281",11,1,10,3,18,13,"","","",""],["R0282",11,0,11,4,33,4,"","","",""],["R0283",11,0,12,4,33,4,"","","",""],["R0284",11,1,13,5,7,7,"","","",""],["R0285",11,3,14,6,36,0,"","","",""],["R0286",11,3,28,6,29,8,"","","",""],["R0287",11,4,15,7,20,0,"","","",""],["R0288",11,4,16,7,20,0,"","","",""],["R0289",11,4,17,7,20,0,"","","",""],["R0290",11,5,18,8,10,10,"","","",""],["R0291",11,6,19,8,11,10,"","","",""],["R0292",11,6,20,8,11,10,"","","",""],["R0293",11,7,21,9,37,22,"","","",""],["R0294",11,7,22,9,37,22,"","","",""],["R0295",11,7,23,9,13,8,"abs","","",""],["R0296",11,7,24,9,37,22,"","","",""],["R0297",11,7,25,9,37,22,"","","",""],["R0298",11,8,26,10,14,0,"","","",""],["R0299",12,0,0,0,8,8,"trip","","",""],["R0300",12,0,7,3,8,4,"trip","","",""],["R0301",12,0,8,3,8,4,"trip","","",""],["R0302",12,0,11,4,8,6,"trip","","",""],["R0303",12,0,12,4,8,6,"trip","","",""],["R0304",12,1,13,5,7,7,"","","",""],["R0305",12,3,14,6,36,0,"","","",""],["R0306",12,3,28,6,29,8,"","","",""],["R0307",13,0,0,0,8,8,"trip","","",""],["R0308",13,0,7,3,8,4,"trip","","",""],["R0309",13,0,8,3,8,4,"trip","","",""],["R0310",13,0,11,4,8,6,"trip","","",""],["R0311",13,0,12,4,8,6,"trip","","",""],["R0312",13,1,13,5,7,7,"","","",""],["R0313",13,3,14,6,36,0,"","","",""],["R0314",13,3,28,6,29,8,"","","",""]],"issues":[{"id":"P001","date":"2026-08-24","ditta":"RICCI","zona":"VILLA","cat":"MANODOPERA","desc":"Serban Florentin non partito da Roma: ancora impegnato al cantiere Vergini","eff":"Ritardo critico sull'impermeabilizzazione della Villa","grav":"CRITICA","act":"Contattato DTC Vergini F. Ricci: concordata partenza per giovedì","own":"F. RICCI / DTC","due":"2026-08-27","st":"IN CORSO"},{"id":"P002","date":"2026-08-24","ditta":"BARBETTI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Impianto di betonaggio chiuso: riapre il 31/08/26","eff":"Getti e massetti non programmabili prima del 31/08","grav":"ALTA","act":"Ordinare magrone con pompino per mercoledì 2 settembre","own":"CAPOCANTIERE","due":"2026-08-31","st":"IN CORSO"},{"id":"P003","date":"2026-08-24","ditta":"MARZINI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Massetto in giacenza pari a 0; in arrivo 20 bancali in settimana","eff":"Rischio fermo della squadra massetti EDIL EG","grav":"MEDIA","act":"Sollecitare consegna e confermare data di arrivo","own":"CAPOCANTIERE","due":"2026-08-28","st":"APERTO"}],"rev":2}</script>
+<script id="app-src">(function () {
+  "use strict";
+  var S = JSON.parse(document.getElementById("state").textContent);
+  var app = document.getElementById("app");
+  var dirty = 0, readOnly = false, publishing = false, saved = 0;
+  var shared = false;            // true solo se la pagina gira come artifact Claude condiviso
+  var view = { tab: "day", day: 0, table: false };
+
+  /* --- archivio condiviso (facoltativo): se configurato, tutti vedono lo stesso registro --- */
+  var CFG = window.SUVERA_SYNC || {};
+  var SY = {
+    on: !!(CFG.url && CFG.key), rev: 0, busy: false, pending: false,
+    touched: {}, lastOk: 0, state: "attesa", when: ""
+  };
+
+  var GG = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
+  var GGL = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+  var CATS = ["MANODOPERA", "MATERIALI / FORNITURE", "MEZZI E ATTREZZATURE", "METEO",
+    "PROGETTO / DL", "INTERFERENZE", "AUTORIZZAZIONI", "SICUREZZA", "ALTRO"];
+  var STL = { ok: "Eseguita", part: "Parziale", ko: "Non eseguita", abs: "Assente", trip: "Trasferta", na: "N/A" };
+
+  // row: [id, day, ditta, ope, squ, att, zon, st, cat, desc, az]
+  var R = { ID: 0, D: 1, F: 2, O: 3, Q: 4, A: 5, Z: 6, ST: 7, CAT: 8, DESC: 9, AZ: 10 };
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function dmy(iso) { var p = iso.split("-"); return p[2] + "/" + p[1]; }
+  function wd(iso) { return (new Date(iso + "T12:00:00")).getDay(); }
+  function gg(iso) { var d = wd(iso); return GG[(d + 6) % 7]; }
+  function ggl(iso) { var d = wd(iso); return GGL[(d + 6) % 7]; }
+  function rowsOf(day) { return S.rows.filter(function (r) { return r[R.D] === day; }); }
+
+  function tally(rs) {
+    var t = { n: rs.length, ok: 0, part: 0, ko: 0, idle: 0, out: 0 };
+    rs.forEach(function (r) {
+      var s = r[R.ST];
+      if (s === "ok") t.ok++;
+      else if (s === "part") t.part++;
+      else if (s === "ko") t.ko++;
+      else if (s === "abs" || s === "trip" || s === "na") t.out++;
+      else t.idle++;
+    });
+    t.base = t.n - t.out;
+    t.pct = t.base > 0 ? (t.ok + 0.5 * t.part) / t.base : null;
+    return t;
+  }
+
+  /* ------------------------------------------------ header */
+  function hTop() {
+    var tabs = [["day", "Giornata"], ["firm", "Ditte"], ["iss", "Criticità"], ["trend", "Andamento"]];
+    return '<header class="top"><div class="top-in">' +
+      '<div class="brand"><h1>La Suvera</h1>' +
+      '<span class="sub">Pievescola &middot; monitoraggio programma</span>' +
+      (SY.on ? '<span class="synced s-' + SY.state + '">' + chipText() + "</span>" : "") +
+      "</div>" +
+      '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
+        return '<button class="tab" role="tab" data-tab="' + t[0] + '" aria-selected="' +
+          (view.tab === t[0]) + '">' + t[1] + "</button>";
+      }).join("") + "</nav></div></header>";
+  }
+
+  function hDays() {
+    return '<div class="daystrip">' + S.days.map(function (d, i) {
+      var t = tally(rowsOf(i)), w = wd(d) === 0 || wd(d) === 6;
+      return '<button class="day' + (w ? " wknd" : "") + '" data-day="' + i + '" aria-pressed="' +
+        (view.day === i) + '"><span class="dw">' + gg(d) + '</span><span class="dn">' +
+        d.split("-")[2] + '</span><span class="bar"><i style="width:' +
+        (t.pct === null ? 0 : Math.round(t.pct * 100)) + '%"></i></span></button>';
+    }).join("") + "</div>";
+  }
+
+  function hTiles(t) {
+    function tl(cls, v, lab) {
+      return '<div class="tile ' + cls + '"><b>' + v + "</b><span>" + lab + "</span></div>";
+    }
+    return '<div class="tiles">' + tl("ok", t.ok, "Eseguite") + tl("part", t.part, "Parziali") +
+      tl("ko", t.ko, "Non eseguite") + tl("idle", t.idle, "Da compilare") + "</div>";
+  }
+
+  function hMeter(t, label) {
+    var seg = function (c, v) {
+      return v ? '<i class="' + c + '" style="width:' + (v / Math.max(1, t.n) * 100) + '%"></i>' : "";
+    };
+    return '<div class="card meter"><div><div class="pct">' +
+      (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") + '</div><div class="lab">' + label +
+      '</div></div><div class="track">' + seg("ok", t.ok) + seg("part", t.part) + seg("ko", t.ko) +
+      seg("idle", t.idle + t.out) + "</div></div>";
+  }
+
+  /* ------------------------------------------------ day view */
+  function hDay() {
+    var rs = rowsOf(view.day), t = tally(rs), h = "";
+    h += hDays() + hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t);
+    if (!rs.length) return h + '<div class="card empty">Nessuna attività programmata in questa data.</div>';
+    var byQ = {};
+    rs.forEach(function (r) { (byQ[r[R.Q]] = byQ[r[R.Q]] || []).push(r); });
+    Object.keys(byQ).forEach(function (q) {
+      var g = byQ[q], gt = tally(g);
+      h += '<section class="grp"><h2>' + esc(S.squ[q]) + '<span class="n">' +
+        (gt.ok + gt.part) + "/" + gt.base + "</span></h2>";
+      g.forEach(function (r) { h += hRow(r); });
+      h += "</section>";
+    });
+    return h;
+  }
+
+  function hRow(r) {
+    var st = r[R.ST], cls = st ? "s-" + st : "s-none";
+    var btn = function (v, glyph, lab) {
+      return '<button class="b-' + v + '" data-act="st" data-id="' + r[R.ID] + '" data-v="' + v +
+        '" aria-pressed="' + (st === v) + '" aria-label="' + lab + '"><span class="g" aria-hidden="true">' +
+        glyph + "</span>" + lab + "</button>";
+    };
+    var h = '<article class="card row ' + cls + '"><div class="who"><span class="name">' +
+      esc(S.ope[r[R.O]]) + '</span><span class="firm">' + esc(S.dit[r[R.F]]) +
+      "</span></div>" +
+      '<div class="task">' + esc(S.att[r[R.A]]) + "</div>" +
+      '<div class="zoneline"><span class="zone">' + esc(S.zon[r[R.Z]]) + "</span>" +
+      (st === "trip" ? '<span class="tag">trasferta</span>' : "") +
+      '<span class="rid">' + r[R.ID] + "</span></div>" +
+      '<div class="seg">' + btn("ok", "✓", "Fatta") + btn("part", "◐", "Parziale") +
+      btn("ko", "✕", "Non fatta") + btn("abs", "–", "Assente") + "</div>";
+    if (st === "ko" || st === "part") {
+      h += '<div class="detail"><div><label for="c-' + r[R.ID] + '">Causa</label>' +
+        '<select id="c-' + r[R.ID] + '" data-act="cat" data-id="' + r[R.ID] + '"><option value="">— scegli —</option>' +
+        CATS.map(function (c) {
+          return '<option' + (r[R.CAT] === c ? " selected" : "") + ">" + c + "</option>";
+        }).join("") + "</select></div>" +
+        '<div><label for="d-' + r[R.ID] + '">Cosa è successo e che effetto ha</label>' +
+        '<textarea id="d-' + r[R.ID] + '" data-act="desc" data-id="' + r[R.ID] +
+        '" placeholder="Es. materiale non consegnato; slitta il getto di giovedì">' + esc(r[R.DESC]) + "</textarea></div>" +
+        '<div><label for="a-' + r[R.ID] + '">Cosa si fa per recuperare</label>' +
+        '<textarea id="a-' + r[R.ID] + '" data-act="az" data-id="' + r[R.ID] +
+        '" placeholder="Es. sollecitato fornitore, recupero sabato">' + esc(r[R.AZ]) + "</textarea></div></div>";
+    }
+    return h + "</article>";
+  }
+
+  /* ------------------------------------------------ firms */
+  function hFirm() {
+    var by = {};
+    S.rows.forEach(function (r) { (by[r[R.F]] = by[r[R.F]] || []).push(r); });
+    var keys = Object.keys(by).sort(function (a, b) { return S.dit[a] < S.dit[b] ? -1 : 1; });
+    var h = '<h2 class="sectionhead">Avanzamento per ditta</h2>' +
+      '<p class="notice">Sulle due settimane di programma (' + dmy(S.days[0]) + " – " + dmy(S.days[13]) + ").</p>";
+    keys.forEach(function (k) {
+      var t = tally(by[k]);
+      h += '<article class="card row"><div class="who"><span class="name">' + esc(S.dit[k]) +
+        '</span><span class="rid">' + (t.ok + t.part) + "/" + t.base + " gg-uomo</span></div>" +
+        '<div class="track" style="margin-top:8px">' +
+        (t.ok ? '<i class="ok" style="width:' + (t.ok / t.n * 100) + '%"></i>' : "") +
+        (t.part ? '<i class="part" style="width:' + (t.part / t.n * 100) + '%"></i>' : "") +
+        (t.ko ? '<i class="ko" style="width:' + (t.ko / t.n * 100) + '%"></i>' : "") +
+        (t.idle + t.out ? '<i class="idle" style="width:' + ((t.idle + t.out) / t.n * 100) + '%"></i>' : "") +
+        "</div></article>";
+    });
+    return h + hLegend();
+  }
+
+  /* ------------------------------------------------ issues */
+  function hIss() {
+    var open = S.rows.filter(function (r) { return (r[R.ST] === "ko" || r[R.ST] === "part") && (r[R.DESC] || r[R.CAT]); });
+    var h = '<h2 class="sectionhead">Criticità di cantiere</h2>';
+    S.issues.forEach(function (p) {
+      var cls = p.st === "CHIUSO" ? "closed" : (p.st === "IN CORSO" ? "mid" : "");
+      h += '<article class="card issue ' + cls + '"><h3>' + esc(p.desc) + "</h3>" +
+        '<div class="meta"><span class="tag">' + esc(p.id) + '</span><span class="tag">' + esc(p.ditta) +
+        '</span><span class="tag">' + esc(p.cat) + '</span><span class="tag ' +
+        (p.grav === "CRITICA" || p.grav === "ALTA" ? "ko" : "") + '">' + esc(p.grav) + "</span></div>" +
+        "<dl><dt>Effetto</dt><dd>" + esc(p.eff) + "</dd>" +
+        "<dt>Azione</dt><dd>" + esc(p.act) + "</dd>" +
+        "<dt>Chi</dt><dd>" + esc(p.own) + "</dd>" +
+        "<dt>Entro</dt><dd class=\"mono\">" + dmy(p.due) + "</dd></dl>" +
+        '<div class="acts">' + ["APERTO", "IN CORSO", "CHIUSO"].map(function (s) {
+          return '<button data-act="iss" data-id="' + p.id + '" data-v="' + s + '" aria-pressed="' +
+            (p.st === s) + '">' + s + "</button>";
+        }).join("") + "</div></article>";
+    });
+    h += '<h2 class="sectionhead">Segnalazioni dal registro giornaliero</h2>';
+    if (!open.length) h += '<div class="card empty">Nessuna segnalazione aperta dal registro.</div>';
+    open.forEach(function (r) {
+      h += '<article class="card issue ' + (r[R.ST] === "part" ? "mid" : "") + '">' +
+        "<h3>" + esc(r[R.DESC] || S.att[r[R.A]]) + "</h3>" +
+        '<div class="meta"><span class="tag ' + (r[R.ST] === "ko" ? "ko" : "part") + '">' + STL[r[R.ST]] +
+        '</span><span class="tag">' + dmy(S.days[r[R.D]]) + '</span><span class="tag">' + esc(S.dit[r[R.F]]) +
+        '</span><span class="tag">' + esc(S.zon[r[R.Z]]) + "</span>" +
+        (r[R.CAT] ? '<span class="tag">' + esc(r[R.CAT]) + "</span>" : "") + "</div>" +
+        "<dl><dt>Attività</dt><dd>" + esc(S.att[r[R.A]]) + "</dd>" +
+        "<dt>Chi</dt><dd>" + esc(S.ope[r[R.O]]) + "</dd>" +
+        (r[R.AZ] ? "<dt>Azione</dt><dd>" + esc(r[R.AZ]) + "</dd>" : "") + "</dl></article>";
+    });
+    return h;
+  }
+
+  /* ------------------------------------------------ trend */
+  function hLegend() {
+    return '<div class="legend" style="margin-top:14px">' +
+      ['<span><i style="background:var(--ok)"></i>Eseguite</span>',
+        '<span><i style="background:var(--part)"></i>Parziali</span>',
+        '<span><i style="background:var(--ko)"></i>Non eseguite</span>',
+        '<span><i style="background:var(--idle);opacity:.45"></i>Da compilare / fuori cantiere</span>'].join("") + "</div>";
+  }
+
+  function hTrend() {
+    var rowsHtml = S.days.map(function (d, i) {
+      var t = tally(rowsOf(i));
+      var LBL = { ok: "eseguite", part: "parziali", ko: "non eseguite", idle: "da compilare" };
+      var seg = function (c, v) {
+        return v ? '<i class="' + c + '" style="width:' + (v / Math.max(1, t.n) * 100) +
+          '%" title="' + v + " " + LBL[c] + '"></i>' : "";
+      };
+      return '<div class="crow' + (i === view.day ? " today" : "") + '"><span class="cl">' +
+        gg(d) + " " + dmy(d) + '</span><span class="cbar">' + seg("ok", t.ok) + seg("part", t.part) +
+        seg("ko", t.ko) + '<i class="idle" style="opacity:.32;width:' +
+        ((t.idle + t.out) / Math.max(1, t.n) * 100) + '%" title="' + (t.idle + t.out) +
+        ' da compilare o fuori cantiere"></i></span><span class="cv">' +
+        (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") + "</span></div>";
+    }).join("");
+    var tbl = '<div class="scrollx"><table class="data"><thead><tr><th>Giorno</th><th>Progr.</th>' +
+      "<th>Eseg.</th><th>Parz.</th><th>Non eseg.</th><th>Da compil.</th><th>% avanz.</th></tr></thead><tbody>" +
+      S.days.map(function (d, i) {
+        var t = tally(rowsOf(i));
+        return "<tr><td>" + gg(d) + " " + dmy(d) + "</td><td>" + t.n + "</td><td>" + t.ok + "</td><td>" +
+          t.part + "</td><td>" + t.ko + "</td><td>" + t.idle + "</td><td>" +
+          (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+    var all = tally(S.rows);
+    return '<h2 class="sectionhead">Avanzamento giorno per giorno</h2>' +
+      hMeter(all, "avanzamento complessivo delle due settimane") +
+      '<div class="card chart">' + hLegend() + (view.table ? tbl : rowsHtml) + "</div>" +
+      '<div class="toolbar"><button data-act="table">' + (view.table ? "Vedi grafico" : "Vedi tabella") +
+      '</button><button data-act="csv">Scarica CSV per Excel</button></div>';
+  }
+
+  function hSaveBar() {
+    if (readOnly) return "";
+    var t = tally(rowsOf(view.day));
+    var done = t.n - t.idle;
+    if (shared) {
+      return '<div class="savebar' + (dirty ? " on" : "") + '"><div class="savebar-in">' +
+        "<p>" + dirty + (dirty === 1 ? " compilazione da salvare" : " compilazioni da salvare") + "</p>" +
+        '<button data-act="save"' + (publishing ? " disabled" : "") + ">" +
+        (publishing ? "Salvataggio&hellip;" : "Salva") + "</button></div></div>";
+    }
+    return '<div class="savebar on"><div class="savebar-in">' +
+      "<p>" + ggl(S.days[view.day]) + " " + dmy(S.days[view.day]) + ": <b>" + done +
+      "</b> righe su " + t.n + " compilate" +
+      (SY.on ? " &middot; si salva da solo" : "") + "</p>" +
+      '<button data-act="wa">Invia riepilogo</button></div></div>';
+  }
+
+  /* ------------------------------------------------ shell */
+  function render(keepScroll) {
+    var y = window.scrollY;
+    var body = view.tab === "day" ? hDay() : view.tab === "firm" ? hFirm() :
+      view.tab === "iss" ? hIss() : hTrend();
+    app.innerHTML = hTop() + '<main class="wrap">' +
+      (readOnly
+        ? '<p class="notice">Sola lettura: puoi consultare l&rsquo;avanzamento ma non registrare ' +
+          "il consuntivo. Chiedi ad Alfonso l&rsquo;accesso in scrittura.</p>"
+        : "") +
+      body + '<p class="foot">' + (shared
+        ? "Generato dal programma bisettimanale del capocantiere. Premi <b>Salva</b> a fine " +
+          "giornata: da quel momento tutti vedono l&rsquo;avanzamento aggiornato."
+        : SY.on
+          ? "Generato dal programma bisettimanale del capocantiere. Quello che compili si salva " +
+            "da solo e lo vedono tutti quelli che hanno il link, entro pochi secondi."
+          : "Generato dal programma bisettimanale del capocantiere. Quello che compili resta su " +
+            "questo telefono. A fine giornata premi <b>Invia riepilogo</b>.") +
+      "</p></main>" + hSaveBar() +
+      (saved ? '<div class="toast">' + (shared
+        ? "Salvato &mdash; avanzamento aggiornato per tutti"
+        : "Riepilogo pronto per l&rsquo;invio") + "</div>" : "");
+    if (keepScroll) window.scrollTo(0, y);
+  }
+
+  function byId(id) {
+    for (var i = 0; i < S.rows.length; i++) if (S.rows[i][R.ID] === id) return S.rows[i];
+    return null;
+  }
+
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-tab],[data-day],[data-act]");
+    if (!el) return;
+    if (el.dataset.tab) { view.tab = el.dataset.tab; render(); window.scrollTo(0, 0); return; }
+    if (el.dataset.day) { view.day = +el.dataset.day; render(); return; }
+    var a = el.dataset.act;
+    if (a === "st") {
+      if (readOnly) return;
+      var r = byId(el.dataset.id); if (!r) return;
+      r[R.ST] = r[R.ST] === el.dataset.v ? "" : el.dataset.v;
+      if (r[R.ST] !== "ko" && r[R.ST] !== "part") { r[R.CAT] = ""; r[R.DESC] = ""; r[R.AZ] = ""; }
+      dirty++; touch(r); render(true);
+    } else if (a === "iss") {
+      if (readOnly) return;
+      S.issues.forEach(function (p) { if (p.id === el.dataset.id) p.st = el.dataset.v; });
+      dirty++; touch(null); render(true);
+    } else if (a === "table") { view.table = !view.table; render(true); }
+    else if (a === "csv") { csv(); }
+    else if (a === "wa") { sendReport(); }
+    else if (a === "save") { save(); }
+  });
+
+  document.addEventListener("change", function (e) {
+    var el = e.target.closest("[data-act]"); if (!el || readOnly) return;
+    var a = el.dataset.act, r = byId(el.dataset.id); if (!r) return;
+    if (a === "cat") { r[R.CAT] = el.value; dirty++; }
+    else if (a === "desc") { r[R.DESC] = el.value; dirty++; }
+    else if (a === "az") { r[R.AZ] = el.value; dirty++; }
+    touch(r);
+    var bar = document.querySelector(".savebar");
+    if (bar) {
+      bar.classList.add("on");
+      bar.querySelector("p").textContent =
+        dirty + (dirty === 1 ? " compilazione da salvare" : " compilazioni da salvare");
+    }
+  });
+
+  /* ------------------------------------------------ persistence */
+  function docHTML() {
+    var css = document.getElementById("app-css").textContent;
+    var src = document.getElementById("app-src").textContent;
+    S.rev = (S.rev || 1) + 1;
+    return '<!doctype html>\n<html lang="it">\n<head>\n<meta charset="utf-8">\n' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
+      "<title>Cantiere La Suvera</title>\n" +
+      '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">\n' +
+      '<style id="app-css">' + css + "</style>\n</head>\n<body>\n" +
+      '<div id="app"></div>\n' +
+      '<script id="state" type="application/json">' +
+      JSON.stringify(S).replace(/</g, "\\u003c") + "<\/script>\n" +
+      '<script id="app-src">' + src + "<\/script>\n</body>\n</html>";
+  }
+
+  function warn(msg) {
+    var main = document.querySelector("main"); if (!main) return;
+    var n = document.createElement("p");
+    n.className = "notice warn"; n.textContent = msg;
+    main.insertBefore(n, main.firstChild);
+    n.scrollIntoView({ block: "center" });
+  }
+
+  function save() {
+    if (publishing || readOnly || !dirty) return;
+    publishing = true; render(true);
+    var payload;
+    try { payload = docHTML(); }
+    catch (e) { publishing = false; render(true); warn("Non riesco a preparare il salvataggio."); return; }
+    (window.claude && window.claude.use ? window.claude.use("artifact") : Promise.resolve(null))
+      .then(function (art) {
+        if (!art) return Promise.reject({ code: "not_granted" });
+        return art.publish(payload);
+      })
+      .then(function () {
+        dirty = 0; publishing = false; saved = 1; render(true);
+        setTimeout(function () { saved = 0; render(true); }, 3000);
+      })
+      .catch(function (err) {
+        publishing = false;
+        var code = (err && err.code) || "upstream_error";
+        if (code === "conflict") return; // la pagina si ricarica sulla versione vincente
+        if (code === "not_granted" || code === "not_writer" || code === "not_declared" ||
+          code === "capability_disabled" || code === "capability_removed" || code === "consent_required") {
+          readOnly = true; render(true); return;
+        }
+        render(true);
+        warn(code === "rate_limited"
+          ? "Troppi salvataggi ravvicinati: aspetta qualche secondo e ripremi Salva."
+          : "Salvataggio non riuscito. Quello che hai compilato è ancora qui: ripremi Salva fra poco.");
+      });
+  }
+
+  /* --- stato nell'indirizzo della pagina: sopravvive a ricarica e riapertura,
+         senza usare la memoria del browser e senza account --- */
+  var CODE = { "": "-", ok: "o", part: "p", ko: "k", abs: "a", trip: "t", na: "n" };
+  var DECODE = { "-": "", o: "ok", p: "part", k: "ko", a: "abs", t: "trip", n: "na" };
+
+  function rle(str) {
+    var out = "", i = 0;
+    while (i < str.length) {
+      var c = str[i], j = i;
+      while (j < str.length && str[j] === c) j++;
+      out += c + (j - i > 1 ? (j - i) : "");
+      i = j;
+    }
+    return out;
+  }
+  function unrle(str) {
+    var out = "", m, re = /([a-z\-])(\d*)/gi;
+    while ((m = re.exec(str))) {
+      var n = m[2] ? parseInt(m[2], 10) : 1;
+      for (var k = 0; k < n; k++) out += m[1];
+    }
+    return out;
+  }
+
+  function hashWrite() {
+    if (shared) return;
+    try {
+      var s = S.rows.map(function (r) { return CODE[r[R.ST]] || "-"; }).join("");
+      var texts = [];
+      S.rows.forEach(function (r, i) {
+        if (r[R.CAT] || r[R.DESC] || r[R.AZ]) texts.push([i, r[R.CAT], r[R.DESC], r[R.AZ]]);
+      });
+      var iss = {};
+      S.issues.forEach(function (p) { iss[p.id] = p.st; });
+      var pack = { v: 1, s: rle(s), t: texts, i: iss };
+      history.replaceState(null, "", "#d=" + encodeURIComponent(JSON.stringify(pack)));
+    } catch (e) { /* indirizzo troppo lungo o non modificabile: si continua senza */ }
+  }
+
+  function hashRead() {
+    try {
+      var h = location.hash || "";
+      var i = h.indexOf("#d=");
+      if (i !== 0) return false;
+      var pack = JSON.parse(decodeURIComponent(h.slice(3)));
+      if (!pack || pack.v !== 1) return false;
+      var s = unrle(pack.s || "");
+      S.rows.forEach(function (r, k) {
+        if (k < s.length) r[R.ST] = DECODE[s[k]] !== undefined ? DECODE[s[k]] : r[R.ST];
+      });
+      (pack.t || []).forEach(function (t) {
+        var r = S.rows[t[0]];
+        if (r) { r[R.CAT] = t[1] || ""; r[R.DESC] = t[2] || ""; r[R.AZ] = t[3] || ""; }
+      });
+      S.issues.forEach(function (p) { if (pack.i && pack.i[p.id]) p.st = pack.i[p.id]; });
+      return true;
+    } catch (e) { return false; }
+  }
+
+  /* --- sincronizzazione con l'archivio condiviso --- */
+  function pack() {
+    var s = S.rows.map(function (r) { return CODE[r[R.ST]] || "-"; }).join("");
+    var texts = [];
+    S.rows.forEach(function (r, i) {
+      if (r[R.CAT] || r[R.DESC] || r[R.AZ]) texts.push([i, r[R.CAT], r[R.DESC], r[R.AZ]]);
+    });
+    var iss = {};
+    S.issues.forEach(function (p) { iss[p.id] = p.st; });
+    return { v: 1, s: rle(s), t: texts, i: iss };
+  }
+
+  function unpack(p, skip) {
+    if (!p || p.v !== 1) return;
+    var s = unrle(p.s || "");
+    S.rows.forEach(function (r, k) {
+      if (skip && skip[k]) return;                     // modifica locale non ancora inviata
+      if (k < s.length && DECODE[s[k]] !== undefined) r[R.ST] = DECODE[s[k]];
+    });
+    var byIdx = {};
+    (p.t || []).forEach(function (t) { byIdx[t[0]] = t; });
+    S.rows.forEach(function (r, k) {
+      if (skip && skip[k]) return;
+      var t = byIdx[k];
+      r[R.CAT] = t ? (t[1] || "") : "";
+      r[R.DESC] = t ? (t[2] || "") : "";
+      r[R.AZ] = t ? (t[3] || "") : "";
+    });
+    S.issues.forEach(function (q) { if (p.i && p.i[q.id]) q.st = p.i[q.id]; });
+  }
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({
+      apikey: CFG.key,
+      Authorization: "Bearer " + CFG.key,
+      "Content-Type": "application/json"
+    }, opts.headers || {});
+    var base = String(CFG.url || "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
+    return fetch(base + "/rest/v1/" + path, opts);
+  }
+
+  function hhmm(iso) {
+    try {
+      var d = new Date(iso);
+      return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+    } catch (e) { return ""; }
+  }
+
+  function syncPull(then) {
+    if (!SY.on) return;
+    api("suvera_stato?id=eq.1&select=dati,rev,aggiornato")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (rows) {
+        var row = rows && rows[0];
+        if (!row) throw new Error("riga assente");
+        SY.state = "ok"; SY.lastOk = Date.now(); SY.when = hhmm(row.aggiornato);
+        if (row.rev !== SY.rev) {
+          unpack(row.dati, SY.touched);
+          SY.rev = row.rev;
+          render(true);
+        } else { chip(); }
+        if (then) then();
+      })
+      .catch(function () { SY.state = "ko"; chip(); });
+  }
+
+  function syncPush() {
+    if (!SY.on || SY.busy) { SY.pending = true; return; }
+    SY.busy = true; SY.pending = false; SY.state = "invio"; chip();
+    var sending = SY.touched; SY.touched = {};
+    api("suvera_stato?id=eq.1&rev=eq." + SY.rev, {
+      method: "PATCH",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify({ dati: pack(), rev: SY.rev + 1, aggiornato: new Date().toISOString() })
+    })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (rows) {
+        SY.busy = false;
+        if (!rows || !rows.length) {          // qualcun altro ha scritto per primo
+          Object.keys(sending).forEach(function (k) { SY.touched[k] = 1; });
+          syncPull(function () { syncPush(); });
+          return;
+        }
+        SY.rev = rows[0].rev; SY.state = "ok"; SY.lastOk = Date.now();
+        SY.when = hhmm(rows[0].aggiornato); dirty = 0;
+        if (SY.pending) syncPush(); else chip();
+      })
+      .catch(function () {
+        SY.busy = false; SY.state = "ko";
+        Object.keys(sending).forEach(function (k) { SY.touched[k] = 1; });
+        chip();
+      });
+  }
+
+  var pushTimer = null;
+  function touch(row) {
+    if (!SY.on) { hashWrite(); return; }
+    var k = S.rows.indexOf(row);
+    if (k >= 0) SY.touched[k] = 1;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(syncPush, 1200);
+  }
+
+  function chipText() {
+    return SY.state === "ok" ? "condiviso · aggiornato " + (SY.when || "ora")
+      : SY.state === "invio" ? "salvataggio…"
+        : SY.state === "ko" ? "offline · riprovo" : "collegamento…";
+  }
+
+  function chip() {
+    var el = document.querySelector(".synced");
+    if (!el) return;
+    el.className = "synced s-" + SY.state;
+    el.textContent = chipText();
+  }
+
+  function startSync() {
+    if (!SY.on) return;
+    syncPull();
+    setInterval(function () {
+      if (document.hidden || SY.busy) return;
+      syncPull();
+    }, 8000);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) syncPull();
+    });
+    window.addEventListener("online", function () { syncPull(); });
+  }
+
+  /* --- riepilogo di fine giornata --- */
+  function dayReport() {
+    var d = S.days[view.day], rs = rowsOf(view.day), t = tally(rs);
+    var L = ["*LA SUVERA — " + ggl(d).toUpperCase() + " " + dmy(d) + "*"];
+    L.push("Avanzamento: " + (t.pct === null ? "—" : Math.round(t.pct * 100) + "%") +
+      "  (eseguite " + t.ok + ", parziali " + t.part + ", non eseguite " + t.ko +
+      (t.idle ? ", da compilare " + t.idle : "") + " su " + t.base + ")");
+    var ko = rs.filter(function (r) { return r[R.ST] === "ko" || r[R.ST] === "part"; });
+    if (ko.length) {
+      L.push("");
+      L.push("*Da recuperare*");
+      ko.forEach(function (r) {
+        L.push("• " + S.ope[r[R.O]] + " (" + S.dit[r[R.F]] + ") — " + S.att[r[R.A]] +
+          " / " + S.zon[r[R.Z]] + " — " + STL[r[R.ST]].toUpperCase());
+        if (r[R.CAT]) L.push("   causa: " + r[R.CAT]);
+        if (r[R.DESC]) L.push("   problema: " + r[R.DESC]);
+        if (r[R.AZ]) L.push("   azione: " + r[R.AZ]);
+      });
+    }
+    var ab = rs.filter(function (r) { return r[R.ST] === "abs"; });
+    if (ab.length) {
+      L.push("");
+      L.push("*Assenti*: " + ab.map(function (r) { return S.ope[r[R.O]]; }).join(", "));
+    }
+    var idle = rs.filter(function (r) { return !r[R.ST]; });
+    if (idle.length) L.push("", "Righe non compilate: " + idle.length);
+    return L.join("\n");
+  }
+
+  function sendReport() {
+    var txt = dayReport();
+    saved = 1; render(true);
+    setTimeout(function () { saved = 0; render(true); }, 2500);
+    try {
+      window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank");
+    } catch (e) {
+      location.href = "mailto:?subject=" +
+        encodeURIComponent("La Suvera " + dmy(S.days[view.day])) +
+        "&body=" + encodeURIComponent(txt);
+    }
+  }
+
+  function csv() {
+    var head = ["ID", "DATA", "GIORNO", "DITTA", "OPERAIO", "SQUADRA", "ATTIVITA PREVISTA", "ZONA",
+      "STATO", "CAUSA", "PROBLEMA / EFFETTO", "AZIONE"];
+    var q = function (v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
+    var lines = [head.map(q).join(";")];
+    S.rows.forEach(function (r) {
+      lines.push([r[R.ID], S.days[r[R.D]].split("-").reverse().join("/"), ggl(S.days[r[R.D]]),
+        S.dit[r[R.F]], S.ope[r[R.O]], S.squ[r[R.Q]], S.att[r[R.A]], S.zon[r[R.Z]],
+        STL[r[R.ST]] || "DA COMPILARE", r[R.CAT], r[R.DESC], r[R.AZ]].map(q).join(";"));
+    });
+    var data = "﻿" + lines.join("\r\n");
+    (window.claude && window.claude.use ? window.claude.use("downloads") : Promise.resolve(null))
+      .then(function (dl) {
+        if (!dl) throw 0;
+        return dl.save({ filename: "registro_suvera.csv", data: data });
+      })
+      .catch(function () {
+        try {
+          var blob = new Blob([data], { type: "text/csv;charset=utf-8" });
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "registro_suvera.csv";
+          document.body.appendChild(a); a.click();
+          setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        } catch (e) {
+          var b = document.querySelector('[data-act="csv"]');
+          if (b) b.textContent = "Download non disponibile qui";
+        }
+      });
+  }
+
+  /* ------------------------------------------------ avvio */
+  if (!SY.on) hashRead();
+
+  // si apre sul primo giorno ancora da compilare
+  for (var i = 0; i < S.days.length; i++) {
+    if (tally(rowsOf(i)).idle > 0) { view.day = i; break; }
+  }
+  render();
+  startSync();
+
+  // se la pagina gira come artifact Claude, il salvataggio diventa condiviso
+  if (window.claude && window.claude.use) {
+    window.claude.use("artifact").then(function (art) {
+      if (art) { shared = true; render(true); }
+    }, function () { /* niente: resta la modalità telefono */ });
+  }
+})();
+</script>
+</body>
+</html>
