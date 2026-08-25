@@ -77,12 +77,24 @@ h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif
   padding:7px 10px 6px;min-width:56px;color:var(--ink-2);font:inherit}
 .day .dw{font:600 10px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
 .day .dn{font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:600;line-height:1.25;color:var(--ink)}
-.day .bar{height:3px;border-radius:2px;background:var(--line);margin-top:5px;overflow:hidden}
-.day .bar i{display:block;height:100%;background:var(--ok)}
-.day[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);box-shadow:var(--shadow)}
-.day[aria-pressed="true"] .dn,.day[aria-pressed="true"] .dw{color:var(--accent-ink)}
-.day[aria-pressed="true"] .bar{background:rgba(255,255,255,.28)}
+.day .bar{height:4px;border-radius:2px;background:var(--line);margin-top:5px;overflow:hidden;
+  display:flex;gap:1px}
+.day .bar i{display:block;height:100%}
+.day .bar i.ok{background:var(--ok)} .day .bar i.part{background:var(--part)}
+.day .bar i.ko{background:var(--ko)}
+.day.today{border-color:var(--ink-3)}
+.day.today .dw{color:var(--ink-2);font-weight:700}
+.day[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);box-shadow:var(--shadow)}
+.day[aria-pressed="true"] .dn{color:var(--surface)}
+.day[aria-pressed="true"] .dw{color:var(--surface);opacity:.75}
+.day[aria-pressed="true"] .bar{background:rgba(255,255,255,.22)}
+.day.full::after{content:"compilato";display:block;margin-top:4px;
+  font:600 8px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ok)}
+.day[aria-pressed="true"].full::after{color:#8FDDB0}
+.day:not(.full)::after{content:"";display:block;margin-top:4px;height:8px}
 .day.wknd .dn{color:var(--ink-3)}
+.day[aria-pressed="true"].wknd .dn{color:var(--surface);opacity:.8}
 .day:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---------- cards / tiles ---------- */
@@ -350,12 +362,17 @@ window.SUVERA_SYNC = {
   }
 
   function hDays() {
+    var td = oggi();
     return '<div class="daystrip">' + S.days.map(function (d, i) {
       var t = tally(rowsOf(i)), w = wd(d) === 0 || wd(d) === 6;
-      return '<button class="day' + (w ? " wknd" : "") + '" data-day="' + i + '" aria-pressed="' +
-        (view.day === i) + '"><span class="dw">' + gg(d) + '</span><span class="dn">' +
-        d.split("-")[2] + '</span><span class="bar"><i style="width:' +
-        (t.pct === null ? 0 : Math.round(t.pct * 100)) + '%"></i></span></button>';
+      var seg = function (c, v) {
+        return v ? '<i class="' + c + '" style="width:' + (v / Math.max(1, t.n) * 100) + '%"></i>' : "";
+      };
+      return '<button class="day' + (w ? " wknd" : "") + (d === td ? " today" : "") +
+        (t.n && !t.idle ? " full" : "") + '" data-day="' + i + '" aria-pressed="' +
+        (view.day === i) + '"><span class="dw">' + (d === td ? "oggi" : gg(d)) +
+        '</span><span class="dn">' + d.split("-")[2] + '</span><span class="bar">' +
+        seg("ok", t.ok) + seg("part", t.part) + seg("ko", t.ko) + "</span></button>";
     }).join("") + "</div>";
   }
 
@@ -602,7 +619,6 @@ window.SUVERA_SYNC = {
   function hSaveBar() {
     if (readOnly) return "";
     var t = tally(rowsOf(view.day));
-    var done = t.n - t.idle;
     if (shared) {
       return '<div class="savebar' + (dirty ? " on" : "") + '"><div class="savebar-in">' +
         "<p>" + dirty + (dirty === 1 ? " compilazione da salvare" : " compilazioni da salvare") + "</p>" +
@@ -610,8 +626,8 @@ window.SUVERA_SYNC = {
         (publishing ? "Salvataggio&hellip;" : "Salva") + "</button></div></div>";
     }
     return '<div class="savebar on"><div class="savebar-in">' +
-      "<p>" + ggl(S.days[view.day]) + " " + dmy(S.days[view.day]) + ": <b>" + done +
-      "</b> righe su " + t.n + " compilate" +
+      "<p>" + ggl(S.days[view.day]) + " " + dmy(S.days[view.day]) + ": " +
+      (t.idle ? "restano <b>" + t.idle + "</b> righe da compilare" : "<b>giornata completa</b>") +
       (SY.on ? " &middot; si salva da solo" : "") + "</p>" +
       '<button data-act="wa">Invia riepilogo</button></div></div>';
   }
@@ -1040,9 +1056,14 @@ window.SUVERA_SYNC = {
   /* ------------------------------------------------ avvio */
   if (!SY.on) hashRead();
 
-  // si apre sul primo giorno ancora da compilare
-  for (var i = 0; i < S.days.length; i++) {
-    if (tally(rowsOf(i)).idle > 0) { view.day = i; break; }
+  // si apre sulla giornata di oggi; se oggi e' fuori programma, sul primo giorno da compilare
+  var iOggi = S.days.indexOf(oggi());
+  if (iOggi >= 0) {
+    view.day = iOggi;
+  } else {
+    for (var i = 0; i < S.days.length; i++) {
+      if (tally(rowsOf(i)).idle > 0) { view.day = i; break; }
+    }
   }
   render();
   startSync();
