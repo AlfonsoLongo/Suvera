@@ -496,8 +496,10 @@ window.SUVERA_SYNC = {
         glyph + "</span>" + lab + "</button>";
     };
     var h = '<article class="card row ' + cls + '"><div class="who"><span class="name">' +
-      esc(S.ope[r[R.O]]) + '</span><span class="firm">' + esc(S.dit[r[R.F]]) +
-      "</span></div>" +
+      esc(S.ope[r[R.O]]) + "</span>" +
+      (S.dit[r[R.F]] && S.dit[r[R.F]] !== S.ope[r[R.O]]
+        ? '<span class="firm">' + esc(S.dit[r[R.F]]) + "</span>" : "") +
+      "</div>" +
       '<div class="task">' + esc(S.att[r[R.A]]) + "</div>" +
       '<div class="zoneline"><span class="zone">' + esc(S.zon[r[R.Z]]) + "</span>" +
       (st === "trip" ? '<span class="tag">trasferta</span>' : "") +
@@ -531,8 +533,9 @@ window.SUVERA_SYNC = {
         : gg2 === 0 ? "entro oggi"
           : gg2 === 1 ? "entro domani" : "fra " + gg2 + " giorni";
     return '<article class="card rec ' + stato + '">' +
-      '<div class="who"><span class="name">' + esc(S.ope[r[R.O]]) +
-      '</span><span class="firm">' + esc(S.dit[r[R.F]]) + "</span></div>" +
+      '<div class="who"><span class="name">' + esc(S.ope[r[R.O]]) + "</span>" +
+      (S.dit[r[R.F]] && S.dit[r[R.F]] !== S.ope[r[R.O]]
+        ? '<span class="firm">' + esc(S.dit[r[R.F]]) + "</span>" : "") + "</div>" +
       '<div class="task">' + esc(S.att[r[R.A]]) + "</div>" +
       '<div class="zoneline"><span class="zone">' + esc(S.zon[r[R.Z]]) + "</span>" +
       '<span class="tag ' + (r[R.ST] === "ko" ? "ko" : "part") + '">' + STL[r[R.ST]] + "</span>" +
@@ -1093,7 +1096,8 @@ window.SUVERA_SYNC = {
       gs.forEach(function (g, i) {
         var r = g.r;
         L.push("");
-        L.push((i + 1) + ") " + S.dit[r[R.F]] + " — " + nomi(g));
+        var chi = nomi(g);
+        L.push((i + 1) + ") " + (chi === S.dit[r[R.F]] ? chi : S.dit[r[R.F]] + " — " + chi));
         L.push("   " + S.att[r[R.A]] + (S.zon[r[R.Z]] ? " — " + S.zon[r[R.Z]] : ""));
         if (r[R.CAT]) L.push("   Causa: " + r[R.CAT]);
         if (r[R.DESC]) L.push("   " + r[R.DESC]);
@@ -1145,8 +1149,10 @@ window.SUVERA_SYNC = {
     var d = S.days[view.day], rs = rowsOf(view.day), t = tally(rs);
     var riga = function (g) {
       var r = g.r;
-      return "<tr><td>" + esc(S.dit[r[R.F]]) + "<br><span class='pchi'>" + esc(nomi(g)) +
-        "</span></td><td>" + esc(S.att[r[R.A]]) + "</td><td>" + esc(S.zon[r[R.Z]]) +
+      var chi = nomi(g);
+      return "<tr><td>" + esc(S.dit[r[R.F]]) +
+        (chi === S.dit[r[R.F]] ? "" : "<br><span class='pchi'>" + esc(chi) + "</span>") +
+        "</td><td>" + esc(S.att[r[R.A]]) + "</td><td>" + esc(S.zon[r[R.Z]]) +
         "</td><td>" + STL[r[R.ST]] + "</td><td>" + esc(r[R.CAT] || "—") + "</td><td>" +
         esc(r[R.DESC] || "—") + "</td><td>" + esc(r[R.AZ] || "—") + "</td><td>" +
         (r[R.RD] ? dmy(r[R.RD]) : "da fissare") + "</td></tr>";
