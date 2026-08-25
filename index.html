@@ -109,14 +109,14 @@ h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif
   color:var(--ink-2);padding-bottom:6px;border-bottom:1px solid var(--line)}
 .grp>h2 .n{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);font-weight:400;letter-spacing:0}
 .row{margin-top:8px;padding:11px 12px 10px}
-.row .who{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.row .name{font-weight:600;font-size:14px}
-.row .firm{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
-.row .task{margin-top:3px;font-size:14px;color:var(--ink);line-height:1.35}
-.row .zone{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+.row .who,.rec .who{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.row .name,.rec .name{font-weight:600;font-size:14px}
+.row .firm,.rec .firm{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.row .task,.rec .task{margin-top:3px;font-size:14px;color:var(--ink);line-height:1.35}
+.row .zone,.rec .zone{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
   letter-spacing:.03em;color:var(--ink-2);background:var(--surface-2);border-radius:4px;padding:2px 7px}
 .row .rid{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);margin-left:8px}
-.row .zoneline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:6px}
+.row .zoneline,.rec .zoneline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:6px}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px}
 .seg button{appearance:none;cursor:pointer;font:600 11px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.08em;
   text-transform:uppercase;padding:9px 4px;border-radius:7px;border:1px solid var(--line);
@@ -158,10 +158,18 @@ h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif
   background:var(--accent-ink);color:var(--accent);font:600 13px/1 "Barlow Condensed",Arial,sans-serif;
   letter-spacing:.11em;text-transform:uppercase}
 .savebar button[disabled]{opacity:.55;cursor:default}
+.alert{display:block;width:100%;text-align:left;appearance:none;cursor:pointer;
+  margin:10px 0 2px;padding:11px 13px;border-radius:var(--r);border:1px solid var(--ko);
+  background:var(--ko-bg);color:var(--ko);font:600 12.5px/1.35 "IBM Plex Sans",sans-serif}
+.alert:focus-visible{outline:2px solid var(--ko);outline-offset:2px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:70;
   background:var(--ok);color:#fff;border-radius:20px;padding:9px 18px;font-size:12.5px;
   box-shadow:0 6px 20px rgba(0,0,0,.22);max-width:92vw;text-align:center}
-:root[data-theme="dark"] .toast,:root:not([data-theme="light"]) .toast{color:#0C1614}
+:root[data-theme="dark"] .toast,:root:not([data-theme="light"]) .alert{display:block;width:100%;text-align:left;appearance:none;cursor:pointer;
+  margin:10px 0 2px;padding:11px 13px;border-radius:var(--r);border:1px solid var(--ko);
+  background:var(--ko-bg);color:var(--ko);font:600 12.5px/1.35 "IBM Plex Sans",sans-serif}
+.alert:focus-visible{outline:2px solid var(--ko);outline-offset:2px}
+.toast{color:#0C1614}
 .notice{margin:12px 0;padding:10px 12px;border-radius:var(--r);font-size:12.5px;
   background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .notice.warn{background:var(--ko-bg);border-color:var(--ko);color:var(--ko)}
@@ -207,6 +215,35 @@ table.data td:first-child{font-family:"IBM Plex Sans",sans-serif}
   text-transform:uppercase;padding:8px 12px;border-radius:7px;border:1px solid var(--line);
   background:var(--surface);color:var(--ink-2)}
 .toolbar button:focus-visible,.issue .acts button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* ---------- recuperi ---------- */
+.badge{display:inline-block;margin-left:5px;min-width:16px;padding:1px 5px;border-radius:9px;
+  background:var(--ko);color:#fff;font-family:"IBM Plex Mono",monospace;font-size:9.5px;line-height:1.5;
+  font-weight:600;letter-spacing:0;vertical-align:1px}
+.rechead{margin:20px 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.11em;color:var(--ink-2);
+  font-family:"Barlow Condensed",Arial,sans-serif;font-weight:600}
+.rechead.ko{color:var(--ko)} .rechead.ok{color:var(--ok)}
+.rec{margin-top:8px;padding:11px 12px 10px;border-left:3px solid var(--line)}
+.rec.late{border-left-color:var(--ko)} .rec.soon{border-left-color:var(--part)}
+.rec.nodate{border-left:3px dashed var(--idle)} .rec.done{border-left-color:var(--ok);opacity:.68}
+.rec .promessa{margin:7px 0 0;font-size:13px;color:var(--ink-2);line-height:1.35;
+  padding-left:9px;border-left:2px solid var(--line-soft)}
+.recline{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.recline .quando{font:600 10.5px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;padding:5px 8px;border-radius:5px;background:var(--surface-2);color:var(--ink-2)}
+.rec.late .recline .quando{background:var(--ko-bg);color:var(--ko)}
+.rec.soon .recline .quando{background:var(--part-bg);color:var(--part)}
+.rec.done .recline .quando{background:var(--ok-bg);color:var(--ok)}
+.recline input[type="date"]{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:6px;padding:5px 6px;flex:1 1 120px;min-width:110px;max-width:170px}
+.recline button{appearance:none;cursor:pointer;font:600 10.5px/1 "Barlow Condensed",Arial,sans-serif;
+  letter-spacing:.09em;text-transform:uppercase;padding:8px 12px;border-radius:6px;
+  border:1px solid var(--ok);background:var(--ok);color:#fff}
+.rec.done .recline button{background:var(--surface);color:var(--ink-2);border-color:var(--line)}
+.recline input[type="date"]:focus,.recline button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.detail input[type="date"]{width:100%;font:inherit;font-size:13.5px;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:8px 9px}
+.detail input[type="date"]:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+
 .sectionhead{margin:20px 0 2px;font-size:15px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2)}
 .foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-3)}
 @media (max-width:420px){
@@ -226,7 +263,7 @@ window.SUVERA_SYNC = {
   key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhdmxmcHZuY2hram9idHl3cWtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzU5MjIsImV4cCI6MjEwMzIxMTkyMn0.c59JIgkMoT2Fm7cH5dFRLyDT6-r6voNE9cSHnAZczHg"    /* la chiave "anon public" del progetto */
 };
 </script>
-<script id="state" type="application/json">{"days":["2026-08-24","2026-08-25","2026-08-26","2026-08-27","2026-08-28","2026-08-29","2026-08-30","2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06"],"dit":["QUALITY SERVICE","RICCI","PITTURE EDILI","JLL2002","EDILKOTRA","ARCHEOLOGA","P&P DI PAGNANELLI","EDIL EG","PETTINELLI"],"ope":["AMICIZIA CESARE","IBRAHIM WAEL MOHAMED ELBASSIOUNI","CARTONGESSI 1","CARTONGESSI 2","CARTONGESSI 3","CARTONGESSI 4","SERBAN FLORENTIN","GUEYE SERIGNE","TALEL BENAISSA","GADELRAB (FRA MIMMO) ALAA MOHAMED EL B.","GADELRAB MIMMO MOHAMED ABDELGAYED","DELLE DONNE STEFANO","POSSIDENTE ALESSANDRO","DYLIA ALTIN","DEL VESCOVO ULISSE","PONTEGGI 1","PONTEGGI 2","PONTEGGI 3","ELEONORA IACOPINI","LEONI MARINO","PAGNANELLI TOMMASO","BALLAN SORIN","CORRENTI FONTANA ROBERTO","MARENA IBRAHIMA","MARINI NICCOLO","STAMA PASTOLICA","PETTINELLI","PARFENE SORIN","JLL2002 2"],"squ":["Assistenze impianti","Cartongessi","Copertura / impermeabilizzazione","Demolizioni 1","Demolizioni 2","Gru e assistenza","Opere strutturali JLL","Ponteggi","Scavi e archeologia","Strutture e massetti","Trattamento travi"],"att":["ASSISTENZE IMPIANTI","REALIZZAZIONE NICCHIA","PARETI PRIMA FASE PARETI MANCANTI","IMPERMEABILIZZAZIONE","DEMOLIZIONE PAVIMENTI","DEMOLIZIONE PAVIMENTI O / AIUTO IMPERMEABILIZZAZIONE","DEMOLIZIONE SOFFITTI","ASSISTENZA CON GRU","ROMA","SMONTAGGIO SOTTOPONTE","ASSISTENZA AGLI SCAVI","SCAVO ELETTRICO ENEL","CORDOLO PERIMETRALE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO)","ASSENTE","TRATTAMENTO TRAVI","SCAVO ELETTRICO E MECCANICO","CORDOLO PERIMETRALE (MATTINA) / MASSETTO CORRIDOIO (POMERIGGIO)","PARETI PRIMA FASE","DEMOLIZIONE PAVIMENTI / POSA CAVIDOTTI","DEMOLIZIONE PARETI","MONTAGGIO PONTEGGIO","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA APELLE (POM)","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA ANDREINA (POM)","MILANO","CHUSURA SECONDA FASE E STUCCATURA","IMPERMEABILIZZAZIONE / POSA TEGOLE","DEMOLIZIONE PAV E MASSETTO","DEMOLIZIONE PAVIMENTI /","PREPARAZIONE FONDAZIONE ASCENSORE","ALL'OCCORRENZA ALA COME AIUTANTE","IISOLANTE (MATTINA) / MASSETTO STANZA PT(POMERIGGIO)","PREPARAZIONE SOLAI","IISOLANTE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO) DOVE DEOLITO PAVIMENTO AD ESCUSIONE DEI BAGNI","DEMOLIZIONE SOLAIO","GETTO MAGRONE CUNICOLO","TAVOLATO IN LEGNO (MATTINA) / MASSETTO TERRAZZO (POMERIGGIO)","PREPARAZIONE PARETI CUNICOLO","TAVOLATO IN LEGNO (MATTINA) /"],"zon":["FATTORIA","SPECTRE","MANICA","VILLA","OLIVIERA P1","OLIVIERA P1 / VILLA","OLIVIERA FINE","TUTTI","—","BAR LIMONI","STRADA SUP","BAR LIMONI / SCUDERIA P1","VILLA P2","FATTORIA PT","OLIVIERA","BAR LIMONI / SCUDERIA PT","VILLA P3","SCUDERIA","VILLA PT","BAR LIMONI / MANICA","BAR LIMONI / FATTORIA P1","BAR LIMONI / MANICA TERRAZZO","BAR LIMONI /"],"rows":[["R0001",0,0,0,0,0,0,"ok","","",""],["R0002",0,1,1,0,0,0,"ok","","",""],["R0003",0,2,2,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento"],["R0004",0,2,3,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento"],["R0005",0,2,4,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08"],["R0006",0,2,5,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08"],["R0007",0,1,6,2,3,3,"ko","MANODOPERA","Florentin non e' partito da Roma: ancora impegnato al cantiere Vergini - effetto: ritardo critico sull'impermeabilizzazione","Contattato il DTC Vergini F. Ricci: partenza concordata per giovedi'"],["R0008",0,0,7,3,4,4,"ok","","",""],["R0009",0,0,8,3,4,4,"ok","","",""],["R0010",0,1,9,3,4,4,"ok","","",""],["R0011",0,1,10,3,5,5,"part","MANODOPERA","Non ha potuto fare assistenza all'impermeabilizzazione perche' Florentin non era presente - effetto: ritardo critico sull'impermeabilizzazione","Oltre alla demolizione pavimento ha eseguito assistenza tracce, massetto e assistenza bobcat"],["R0012",0,0,11,4,6,6,"ok","","",""],["R0013",0,0,12,4,6,6,"ok","","",""],["R0014",0,1,13,5,7,7,"ok","","",""],["R0015",0,3,14,6,8,8,"trip","","",""],["R0016",0,4,15,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0017",0,4,16,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0018",0,4,17,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08"],["R0019",0,5,18,8,10,10,"ok","","",""],["R0020",0,6,19,8,11,10,"ok","","",""],["R0021",0,6,20,8,11,10,"ok","","",""],["R0022",0,7,21,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0023",0,7,22,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0024",0,7,23,9,13,8,"abs","","",""],["R0025",0,7,24,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0026",0,7,25,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni"],["R0027",0,8,26,10,14,0,"part","MATERIALI / FORNITURE","Materiale non adeguato: servono un altro trabattello, un compressore e altre attrezzature","Recupero dal 25/08"],["R0028",1,0,0,0,0,0,"","","",""],["R0029",1,1,1,0,0,0,"","","",""],["R0030",1,2,2,1,2,0,"","","",""],["R0031",1,2,3,1,2,0,"","","",""],["R0032",1,2,4,1,2,0,"","","",""],["R0033",1,2,5,1,2,0,"","","",""],["R0034",1,1,6,2,3,3,"","","",""],["R0035",1,0,7,3,4,4,"","","",""],["R0036",1,0,8,3,4,4,"","","",""],["R0037",1,1,9,3,4,4,"","","",""],["R0038",1,1,10,3,5,4,"","","",""],["R0039",1,0,11,4,6,6,"","","",""],["R0040",1,0,12,4,6,6,"","","",""],["R0041",1,1,13,5,7,7,"","","",""],["R0042",1,3,14,6,8,8,"trip","","",""],["R0043",1,4,15,7,9,9,"","","",""],["R0044",1,4,16,7,9,9,"","","",""],["R0045",1,4,17,7,9,9,"","","",""],["R0046",1,5,18,8,10,10,"","","",""],["R0047",1,6,19,8,15,10,"","","",""],["R0048",1,6,20,8,15,10,"","","",""],["R0049",1,7,21,9,16,11,"","","",""],["R0050",1,7,22,9,16,11,"","","",""],["R0051",1,7,23,9,13,8,"abs","","",""],["R0052",1,7,24,9,16,11,"","","",""],["R0053",1,7,25,9,16,11,"","","",""],["R0054",1,8,26,10,14,0,"","","",""],["R0055",2,0,0,0,0,0,"","","",""],["R0056",2,1,1,0,0,0,"","","",""],["R0057",2,2,2,1,17,12,"","","",""],["R0058",2,2,3,1,17,12,"","","",""],["R0059",2,2,4,1,17,12,"","","",""],["R0060",2,2,5,1,17,12,"","","",""],["R0061",2,1,6,2,3,3,"","","",""],["R0062",2,0,7,3,4,4,"","","",""],["R0063",2,0,8,3,4,4,"","","",""],["R0064",2,1,9,3,18,13,"","","",""],["R0065",2,1,10,3,5,13,"","","",""],["R0066",2,0,11,4,19,6,"","","",""],["R0067",2,0,12,4,19,6,"","","",""],["R0068",2,1,13,5,7,7,"","","",""],["R0069",2,3,14,6,8,8,"trip","","",""],["R0070",2,4,15,7,20,14,"","","",""],["R0071",2,4,16,7,20,14,"","","",""],["R0072",2,4,17,7,20,14,"","","",""],["R0073",2,5,18,8,10,10,"","","",""],["R0074",2,6,19,8,15,10,"","","",""],["R0075",2,6,20,8,15,10,"","","",""],["R0076",2,7,21,9,16,15,"","","",""],["R0077",2,7,22,9,16,15,"","","",""],["R0078",2,7,23,9,13,8,"abs","","",""],["R0079",2,7,24,9,16,15,"","","",""],["R0080",2,7,25,9,16,15,"","","",""],["R0081",2,8,26,10,14,0,"","","",""],["R0082",3,0,0,0,0,0,"","","",""],["R0083",3,1,1,0,0,0,"","","",""],["R0084",3,2,2,1,17,12,"","","",""],["R0085",3,2,3,1,17,12,"","","",""],["R0086",3,2,4,1,17,12,"","","",""],["R0087",3,2,5,1,17,12,"","","",""],["R0088",3,1,6,2,3,3,"","","",""],["R0089",3,0,7,3,4,4,"","","",""],["R0090",3,0,8,3,4,4,"","","",""],["R0091",3,1,9,3,18,13,"","","",""],["R0092",3,1,10,3,5,13,"","","",""],["R0093",3,0,11,4,19,6,"","","",""],["R0094",3,0,12,4,19,6,"","","",""],["R0095",3,1,13,5,7,7,"","","",""],["R0096",3,3,14,6,8,8,"trip","","",""],["R0097",3,4,15,7,20,14,"","","",""],["R0098",3,4,16,7,20,14,"","","",""],["R0099",3,4,17,7,20,14,"","","",""],["R0100",3,5,18,8,10,10,"","","",""],["R0101",3,6,19,8,15,10,"","","",""],["R0102",3,6,20,8,15,10,"","","",""],["R0103",3,7,21,9,21,15,"","","",""],["R0104",3,7,22,9,21,15,"","","",""],["R0105",3,7,23,9,13,8,"abs","","",""],["R0106",3,7,24,9,21,15,"","","",""],["R0107",3,7,25,9,21,15,"","","",""],["R0108",3,8,26,10,14,0,"","","",""],["R0109",4,0,0,0,0,0,"","","",""],["R0110",4,1,1,0,0,0,"","","",""],["R0111",4,2,2,1,17,16,"","","",""],["R0112",4,2,3,1,17,16,"","","",""],["R0113",4,2,4,1,17,16,"","","",""],["R0114",4,2,5,1,17,16,"","","",""],["R0115",4,1,6,2,3,3,"","","",""],["R0116",4,0,7,3,4,4,"","","",""],["R0117",4,0,8,3,4,4,"","","",""],["R0118",4,1,9,3,18,13,"","","",""],["R0119",4,1,10,3,5,13,"","","",""],["R0120",4,0,11,4,4,6,"","","",""],["R0121",4,0,12,4,4,6,"","","",""],["R0122",4,1,13,5,7,7,"","","",""],["R0123",4,3,14,6,8,8,"trip","","",""],["R0124",4,4,15,7,20,14,"","","",""],["R0125",4,4,16,7,20,14,"","","",""],["R0126",4,4,17,7,20,14,"","","",""],["R0127",4,5,18,8,10,10,"","","",""],["R0128",4,6,19,8,11,10,"","","",""],["R0129",4,6,20,8,11,10,"","","",""],["R0130",4,7,21,9,22,15,"","","",""],["R0131",4,7,22,9,22,15,"","","",""],["R0132",4,7,23,9,13,8,"abs","","",""],["R0133",4,7,24,9,22,15,"","","",""],["R0134",4,7,25,9,22,15,"","","",""],["R0135",4,8,26,10,14,0,"","","",""],["R0136",5,0,0,0,0,0,"","","",""],["R0137",5,1,1,0,23,8,"trip","","",""],["R0138",5,0,7,3,4,4,"","","",""],["R0139",5,0,8,3,4,4,"","","",""],["R0140",5,1,9,3,23,8,"trip","","",""],["R0141",5,1,10,3,23,8,"trip","","",""],["R0142",5,0,11,4,4,6,"","","",""],["R0143",5,0,12,4,4,6,"","","",""],["R0144",5,1,13,5,23,8,"trip","","",""],["R0145",6,0,0,0,0,0,"","","",""],["R0146",6,1,1,0,23,8,"trip","","",""],["R0147",6,0,7,3,4,4,"","","",""],["R0148",6,0,8,3,4,4,"","","",""],["R0149",6,1,9,3,23,8,"trip","","",""],["R0150",6,1,10,3,23,8,"trip","","",""],["R0151",6,0,11,4,4,6,"","","",""],["R0152",6,0,12,4,4,6,"","","",""],["R0153",6,1,13,5,23,7,"trip","","",""],["R0154",7,0,0,0,0,0,"","","",""],["R0155",7,1,1,0,0,0,"","","",""],["R0156",7,2,2,1,24,17,"","","",""],["R0157",7,2,3,1,24,17,"","","",""],["R0158",7,2,4,1,24,17,"","","",""],["R0159",7,2,5,1,24,17,"","","",""],["R0160",7,1,27,2,25,3,"","","",""],["R0161",7,1,6,2,25,3,"","","",""],["R0162",7,0,7,3,26,2,"","","",""],["R0163",7,0,8,3,26,2,"","","",""],["R0164",7,1,9,3,18,4,"","","",""],["R0165",7,1,10,3,27,4,"","","",""],["R0166",7,0,11,4,26,2,"","","",""],["R0167",7,0,12,4,26,2,"","","",""],["R0168",7,1,13,5,7,7,"","","",""],["R0169",7,3,14,6,28,18,"","","",""],["R0170",7,3,28,6,29,8,"","","",""],["R0171",7,4,15,7,20,14,"","","",""],["R0172",7,4,16,7,20,14,"","","",""],["R0173",7,4,17,7,20,14,"","","",""],["R0174",7,5,18,8,10,10,"","","",""],["R0175",7,6,19,8,11,10,"","","",""],["R0176",7,6,20,8,11,10,"","","",""],["R0177",7,7,21,9,30,19,"","","",""],["R0178",7,7,22,9,30,19,"","","",""],["R0179",7,7,23,9,13,8,"abs","","",""],["R0180",7,7,24,9,30,19,"","","",""],["R0181",7,7,25,9,30,19,"","","",""],["R0182",7,8,26,10,14,0,"","","",""],["R0183",8,0,0,0,0,0,"","","",""],["R0184",8,1,1,0,0,0,"","","",""],["R0185",8,2,2,1,24,17,"","","",""],["R0186",8,2,3,1,24,17,"","","",""],["R0187",8,2,4,1,24,17,"","","",""],["R0188",8,2,5,1,24,17,"","","",""],["R0189",8,1,27,2,25,3,"","","",""],["R0190",8,1,6,2,25,3,"","","",""],["R0191",8,0,7,3,26,2,"","","",""],["R0192",8,0,8,3,26,2,"","","",""],["R0193",8,1,9,3,18,4,"","","",""],["R0194",8,1,10,3,18,4,"","","",""],["R0195",8,0,11,4,26,2,"","","",""],["R0196",8,0,12,4,26,2,"","","",""],["R0197",8,1,13,5,7,7,"","","",""],["R0198",8,3,14,6,31,18,"","","",""],["R0199",8,3,28,6,29,8,"","","",""],["R0200",8,4,15,7,20,0,"","","",""],["R0201",8,4,16,7,20,0,"","","",""],["R0202",8,4,17,7,20,0,"","","",""],["R0203",8,5,18,8,10,10,"","","",""],["R0204",8,6,19,8,15,10,"","","",""],["R0205",8,6,20,8,15,10,"","","",""],["R0206",8,7,21,9,32,20,"","","",""],["R0207",8,7,22,9,32,20,"","","",""],["R0208",8,7,23,9,13,8,"abs","","",""],["R0209",8,7,24,9,32,20,"","","",""],["R0210",8,7,25,9,32,20,"","","",""],["R0211",8,8,26,10,14,0,"","","",""],["R0212",9,0,0,0,0,3,"","","",""],["R0213",9,1,1,0,0,3,"","","",""],["R0214",9,2,2,1,24,17,"","","",""],["R0215",9,2,3,1,24,17,"","","",""],["R0216",9,2,4,1,24,17,"","","",""],["R0217",9,2,5,1,24,17,"","","",""],["R0218",9,1,27,2,25,3,"","","",""],["R0219",9,1,6,2,25,3,"","","",""],["R0220",9,0,7,3,33,4,"","","",""],["R0221",9,0,8,3,33,4,"","","",""],["R0222",9,1,9,3,18,13,"","","",""],["R0223",9,1,10,3,18,13,"","","",""],["R0224",9,0,11,4,33,4,"","","",""],["R0225",9,0,12,4,33,4,"","","",""],["R0226",9,1,13,5,7,7,"","","",""],["R0227",9,3,14,6,34,0,"","","",""],["R0228",9,3,28,6,29,8,"","","",""],["R0229",9,4,15,7,20,0,"","","",""],["R0230",9,4,16,7,20,0,"","","",""],["R0231",9,4,17,7,20,0,"","","",""],["R0232",9,5,18,8,10,10,"","","",""],["R0233",9,6,19,8,15,10,"","","",""],["R0234",9,6,20,8,15,10,"","","",""],["R0235",9,7,21,9,35,21,"","","",""],["R0236",9,7,22,9,35,21,"","","",""],["R0237",9,7,23,9,13,8,"abs","","",""],["R0238",9,7,24,9,35,21,"","","",""],["R0239",9,7,25,9,35,21,"","","",""],["R0240",9,8,26,10,14,0,"","","",""],["R0241",10,0,0,0,0,3,"","","",""],["R0242",10,1,1,0,0,3,"","","",""],["R0243",10,2,2,1,24,17,"","","",""],["R0244",10,2,3,1,24,17,"","","",""],["R0245",10,2,4,1,24,17,"","","",""],["R0246",10,2,5,1,24,17,"","","",""],["R0247",10,1,27,2,25,3,"","","",""],["R0248",10,1,6,2,25,3,"","","",""],["R0249",10,0,7,3,33,4,"","","",""],["R0250",10,0,8,3,33,4,"","","",""],["R0251",10,1,9,3,4,13,"","","",""],["R0252",10,1,10,3,18,13,"","","",""],["R0253",10,0,11,4,33,4,"","","",""],["R0254",10,0,12,4,33,4,"","","",""],["R0255",10,1,13,5,7,7,"","","",""],["R0256",10,3,14,6,36,0,"","","",""],["R0257",10,3,28,6,29,8,"","","",""],["R0258",10,4,15,7,20,0,"","","",""],["R0259",10,4,16,7,20,0,"","","",""],["R0260",10,4,17,7,20,0,"","","",""],["R0261",10,5,18,8,10,10,"","","",""],["R0262",10,6,19,8,15,10,"","","",""],["R0263",10,6,20,8,15,10,"","","",""],["R0264",10,7,21,9,35,21,"","","",""],["R0265",10,7,22,9,35,21,"","","",""],["R0266",10,7,23,9,13,8,"abs","","",""],["R0267",10,7,24,9,35,21,"","","",""],["R0268",10,7,25,9,35,21,"","","",""],["R0269",10,8,26,10,14,0,"","","",""],["R0270",11,0,0,0,0,3,"","","",""],["R0271",11,1,1,0,0,3,"","","",""],["R0272",11,2,2,1,24,17,"","","",""],["R0273",11,2,3,1,24,17,"","","",""],["R0274",11,2,4,1,24,17,"","","",""],["R0275",11,2,5,1,24,17,"","","",""],["R0276",11,1,27,2,25,3,"","","",""],["R0277",11,1,6,2,25,3,"","","",""],["R0278",11,0,7,3,33,4,"","","",""],["R0279",11,0,8,3,33,4,"","","",""],["R0280",11,1,9,3,4,13,"","","",""],["R0281",11,1,10,3,18,13,"","","",""],["R0282",11,0,11,4,33,4,"","","",""],["R0283",11,0,12,4,33,4,"","","",""],["R0284",11,1,13,5,7,7,"","","",""],["R0285",11,3,14,6,36,0,"","","",""],["R0286",11,3,28,6,29,8,"","","",""],["R0287",11,4,15,7,20,0,"","","",""],["R0288",11,4,16,7,20,0,"","","",""],["R0289",11,4,17,7,20,0,"","","",""],["R0290",11,5,18,8,10,10,"","","",""],["R0291",11,6,19,8,11,10,"","","",""],["R0292",11,6,20,8,11,10,"","","",""],["R0293",11,7,21,9,37,22,"","","",""],["R0294",11,7,22,9,37,22,"","","",""],["R0295",11,7,23,9,13,8,"abs","","",""],["R0296",11,7,24,9,37,22,"","","",""],["R0297",11,7,25,9,37,22,"","","",""],["R0298",11,8,26,10,14,0,"","","",""],["R0299",12,0,0,0,8,8,"trip","","",""],["R0300",12,0,7,3,8,4,"trip","","",""],["R0301",12,0,8,3,8,4,"trip","","",""],["R0302",12,0,11,4,8,6,"trip","","",""],["R0303",12,0,12,4,8,6,"trip","","",""],["R0304",12,1,13,5,7,7,"","","",""],["R0305",12,3,14,6,36,0,"","","",""],["R0306",12,3,28,6,29,8,"","","",""],["R0307",13,0,0,0,8,8,"trip","","",""],["R0308",13,0,7,3,8,4,"trip","","",""],["R0309",13,0,8,3,8,4,"trip","","",""],["R0310",13,0,11,4,8,6,"trip","","",""],["R0311",13,0,12,4,8,6,"trip","","",""],["R0312",13,1,13,5,7,7,"","","",""],["R0313",13,3,14,6,36,0,"","","",""],["R0314",13,3,28,6,29,8,"","","",""]],"issues":[{"id":"P001","date":"2026-08-24","ditta":"RICCI","zona":"VILLA","cat":"MANODOPERA","desc":"Serban Florentin non partito da Roma: ancora impegnato al cantiere Vergini","eff":"Ritardo critico sull'impermeabilizzazione della Villa","grav":"CRITICA","act":"Contattato DTC Vergini F. Ricci: concordata partenza per giovedì","own":"F. RICCI / DTC","due":"2026-08-27","st":"IN CORSO"},{"id":"P002","date":"2026-08-24","ditta":"BARBETTI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Impianto di betonaggio chiuso: riapre il 31/08/26","eff":"Getti e massetti non programmabili prima del 31/08","grav":"ALTA","act":"Ordinare magrone con pompino per mercoledì 2 settembre","own":"CAPOCANTIERE","due":"2026-08-31","st":"IN CORSO"},{"id":"P003","date":"2026-08-24","ditta":"MARZINI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Massetto in giacenza pari a 0; in arrivo 20 bancali in settimana","eff":"Rischio fermo della squadra massetti EDIL EG","grav":"MEDIA","act":"Sollecitare consegna e confermare data di arrivo","own":"CAPOCANTIERE","due":"2026-08-28","st":"APERTO"}],"rev":2}</script>
+<script id="state" type="application/json">{"days":["2026-08-24","2026-08-25","2026-08-26","2026-08-27","2026-08-28","2026-08-29","2026-08-30","2026-08-31","2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06"],"dit":["QUALITY SERVICE","RICCI","PITTURE EDILI","JLL2002","EDILKOTRA","ARCHEOLOGA","P&P DI PAGNANELLI","EDIL EG","PETTINELLI"],"ope":["AMICIZIA CESARE","IBRAHIM WAEL MOHAMED ELBASSIOUNI","CARTONGESSI 1","CARTONGESSI 2","CARTONGESSI 3","CARTONGESSI 4","SERBAN FLORENTIN","GUEYE SERIGNE","TALEL BENAISSA","GADELRAB (FRA MIMMO) ALAA MOHAMED EL B.","GADELRAB MIMMO MOHAMED ABDELGAYED","DELLE DONNE STEFANO","POSSIDENTE ALESSANDRO","DYLIA ALTIN","DEL VESCOVO ULISSE","PONTEGGI 1","PONTEGGI 2","PONTEGGI 3","ELEONORA IACOPINI","LEONI MARINO","PAGNANELLI TOMMASO","BALLAN SORIN","CORRENTI FONTANA ROBERTO","MARENA IBRAHIMA","MARINI NICCOLO","STAMA PASTOLICA","PETTINELLI","PARFENE SORIN","JLL2002 2"],"squ":["Assistenze impianti","Cartongessi","Copertura / impermeabilizzazione","Demolizioni 1","Demolizioni 2","Gru e assistenza","Opere strutturali JLL","Ponteggi","Scavi e archeologia","Strutture e massetti","Trattamento travi"],"att":["ASSISTENZE IMPIANTI","REALIZZAZIONE NICCHIA","PARETI PRIMA FASE PARETI MANCANTI","IMPERMEABILIZZAZIONE","DEMOLIZIONE PAVIMENTI","DEMOLIZIONE PAVIMENTI O / AIUTO IMPERMEABILIZZAZIONE","DEMOLIZIONE SOFFITTI","ASSISTENZA CON GRU","ROMA","SMONTAGGIO SOTTOPONTE","ASSISTENZA AGLI SCAVI","SCAVO ELETTRICO ENEL","CORDOLO PERIMETRALE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO)","ASSENTE","TRATTAMENTO TRAVI","SCAVO ELETTRICO E MECCANICO","CORDOLO PERIMETRALE (MATTINA) / MASSETTO CORRIDOIO (POMERIGGIO)","PARETI PRIMA FASE","DEMOLIZIONE PAVIMENTI / POSA CAVIDOTTI","DEMOLIZIONE PARETI","MONTAGGIO PONTEGGIO","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA APELLE (POM)","CORDOLO PERIMETRALE (MATTINA) / IGLOO E GETTO STANZA ANDREINA (POM)","MILANO","CHUSURA SECONDA FASE E STUCCATURA","IMPERMEABILIZZAZIONE / POSA TEGOLE","DEMOLIZIONE PAV E MASSETTO","DEMOLIZIONE PAVIMENTI /","PREPARAZIONE FONDAZIONE ASCENSORE","ALL'OCCORRENZA ALA COME AIUTANTE","IISOLANTE (MATTINA) / MASSETTO STANZA PT(POMERIGGIO)","PREPARAZIONE SOLAI","IISOLANTE (MATTINA) / MASSETTO STANZA P1 (POMERIGGIO) DOVE DEOLITO PAVIMENTO AD ESCUSIONE DEI BAGNI","DEMOLIZIONE SOLAIO","GETTO MAGRONE CUNICOLO","TAVOLATO IN LEGNO (MATTINA) / MASSETTO TERRAZZO (POMERIGGIO)","PREPARAZIONE PARETI CUNICOLO","TAVOLATO IN LEGNO (MATTINA) /"],"zon":["FATTORIA","SPECTRE","MANICA","VILLA","OLIVIERA P1","OLIVIERA P1 / VILLA","OLIVIERA FINE","TUTTI","—","BAR LIMONI","STRADA SUP","BAR LIMONI / SCUDERIA P1","VILLA P2","FATTORIA PT","OLIVIERA","BAR LIMONI / SCUDERIA PT","VILLA P3","SCUDERIA","VILLA PT","BAR LIMONI / MANICA","BAR LIMONI / FATTORIA P1","BAR LIMONI / MANICA TERRAZZO","BAR LIMONI /"],"rows":[["R0001",0,0,0,0,0,0,"ok","","","","",""],["R0002",0,1,1,0,0,0,"ok","","","","",""],["R0003",0,2,2,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento","",""],["R0004",0,2,3,1,1,1,"ko","INTERFERENZE","Non e' stato possibile realizzare la nicchia: non si entra nella Spectre a causa del lavaggio del cotto effettuato venerdi'","Recupero nei prossimi giorni, dopo l'esecuzione del trattamento","",""],["R0005",0,2,4,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08","2026-08-25",""],["R0006",0,2,5,1,2,2,"ko","MATERIALI / FORNITURE","Materiale mancante per le pareti in prima fase - effetto: ritardo sulla prima fase. Hanno stuccato l'ingresso della camera n.2","Recupero domani 25/08","2026-08-25",""],["R0007",0,1,6,2,3,3,"ko","MANODOPERA","Florentin non e' partito da Roma: ancora impegnato al cantiere Vergini - effetto: ritardo critico sull'impermeabilizzazione","Contattato il DTC Vergini F. Ricci: partenza concordata per giovedi'","2026-08-27",""],["R0008",0,0,7,3,4,4,"ok","","","","",""],["R0009",0,0,8,3,4,4,"ok","","","","",""],["R0010",0,1,9,3,4,4,"ok","","","","",""],["R0011",0,1,10,3,5,5,"part","MANODOPERA","Non ha potuto fare assistenza all'impermeabilizzazione perche' Florentin non era presente - effetto: ritardo critico sull'impermeabilizzazione","Oltre alla demolizione pavimento ha eseguito assistenza tracce, massetto e assistenza bobcat","2026-08-27",""],["R0012",0,0,11,4,6,6,"ok","","","","",""],["R0013",0,0,12,4,6,6,"ok","","","","",""],["R0014",0,1,13,5,7,7,"ok","","","","",""],["R0015",0,3,14,6,8,8,"trip","","","","",""],["R0016",0,4,15,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08","2026-08-26",""],["R0017",0,4,16,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08","2026-08-26",""],["R0018",0,4,17,7,9,9,"ko","ALTRO","Da email del 18/08 sul montaggio/smontaggio ponteggi, l'inizio dello smontaggio e' previsto dal 26/08: attivita' non programmabile oggi","Recupero dal 26/08","2026-08-26",""],["R0019",0,5,18,8,10,10,"ok","","","","",""],["R0020",0,6,19,8,11,10,"ok","","","","",""],["R0021",0,6,20,8,11,10,"ok","","","","",""],["R0022",0,7,21,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni","2026-09-01",""],["R0023",0,7,22,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni","2026-09-01",""],["R0024",0,7,23,9,13,8,"abs","","","","",""],["R0025",0,7,24,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni","2026-09-01",""],["R0026",0,7,25,9,12,11,"part","ALTRO","Hanno eseguito cordolo e aggetto del tetto (posa palombelle) per tutta la giornata: massetto non iniziato","Recupero massetto nei prossimi giorni","2026-09-01",""],["R0027",0,8,26,10,14,0,"part","MATERIALI / FORNITURE","Materiale non adeguato: servono un altro trabattello, un compressore e altre attrezzature","Recupero dal 25/08","2026-08-25",""],["R0028",1,0,0,0,0,0,"","","","","",""],["R0029",1,1,1,0,0,0,"","","","","",""],["R0030",1,2,2,1,2,0,"","","","","",""],["R0031",1,2,3,1,2,0,"","","","","",""],["R0032",1,2,4,1,2,0,"","","","","",""],["R0033",1,2,5,1,2,0,"","","","","",""],["R0034",1,1,6,2,3,3,"","","","","",""],["R0035",1,0,7,3,4,4,"","","","","",""],["R0036",1,0,8,3,4,4,"","","","","",""],["R0037",1,1,9,3,4,4,"","","","","",""],["R0038",1,1,10,3,5,4,"","","","","",""],["R0039",1,0,11,4,6,6,"","","","","",""],["R0040",1,0,12,4,6,6,"","","","","",""],["R0041",1,1,13,5,7,7,"","","","","",""],["R0042",1,3,14,6,8,8,"trip","","","","",""],["R0043",1,4,15,7,9,9,"","","","","",""],["R0044",1,4,16,7,9,9,"","","","","",""],["R0045",1,4,17,7,9,9,"","","","","",""],["R0046",1,5,18,8,10,10,"","","","","",""],["R0047",1,6,19,8,15,10,"","","","","",""],["R0048",1,6,20,8,15,10,"","","","","",""],["R0049",1,7,21,9,16,11,"","","","","",""],["R0050",1,7,22,9,16,11,"","","","","",""],["R0051",1,7,23,9,13,8,"abs","","","","",""],["R0052",1,7,24,9,16,11,"","","","","",""],["R0053",1,7,25,9,16,11,"","","","","",""],["R0054",1,8,26,10,14,0,"","","","","",""],["R0055",2,0,0,0,0,0,"","","","","",""],["R0056",2,1,1,0,0,0,"","","","","",""],["R0057",2,2,2,1,17,12,"","","","","",""],["R0058",2,2,3,1,17,12,"","","","","",""],["R0059",2,2,4,1,17,12,"","","","","",""],["R0060",2,2,5,1,17,12,"","","","","",""],["R0061",2,1,6,2,3,3,"","","","","",""],["R0062",2,0,7,3,4,4,"","","","","",""],["R0063",2,0,8,3,4,4,"","","","","",""],["R0064",2,1,9,3,18,13,"","","","","",""],["R0065",2,1,10,3,5,13,"","","","","",""],["R0066",2,0,11,4,19,6,"","","","","",""],["R0067",2,0,12,4,19,6,"","","","","",""],["R0068",2,1,13,5,7,7,"","","","","",""],["R0069",2,3,14,6,8,8,"trip","","","","",""],["R0070",2,4,15,7,20,14,"","","","","",""],["R0071",2,4,16,7,20,14,"","","","","",""],["R0072",2,4,17,7,20,14,"","","","","",""],["R0073",2,5,18,8,10,10,"","","","","",""],["R0074",2,6,19,8,15,10,"","","","","",""],["R0075",2,6,20,8,15,10,"","","","","",""],["R0076",2,7,21,9,16,15,"","","","","",""],["R0077",2,7,22,9,16,15,"","","","","",""],["R0078",2,7,23,9,13,8,"abs","","","","",""],["R0079",2,7,24,9,16,15,"","","","","",""],["R0080",2,7,25,9,16,15,"","","","","",""],["R0081",2,8,26,10,14,0,"","","","","",""],["R0082",3,0,0,0,0,0,"","","","","",""],["R0083",3,1,1,0,0,0,"","","","","",""],["R0084",3,2,2,1,17,12,"","","","","",""],["R0085",3,2,3,1,17,12,"","","","","",""],["R0086",3,2,4,1,17,12,"","","","","",""],["R0087",3,2,5,1,17,12,"","","","","",""],["R0088",3,1,6,2,3,3,"","","","","",""],["R0089",3,0,7,3,4,4,"","","","","",""],["R0090",3,0,8,3,4,4,"","","","","",""],["R0091",3,1,9,3,18,13,"","","","","",""],["R0092",3,1,10,3,5,13,"","","","","",""],["R0093",3,0,11,4,19,6,"","","","","",""],["R0094",3,0,12,4,19,6,"","","","","",""],["R0095",3,1,13,5,7,7,"","","","","",""],["R0096",3,3,14,6,8,8,"trip","","","","",""],["R0097",3,4,15,7,20,14,"","","","","",""],["R0098",3,4,16,7,20,14,"","","","","",""],["R0099",3,4,17,7,20,14,"","","","","",""],["R0100",3,5,18,8,10,10,"","","","","",""],["R0101",3,6,19,8,15,10,"","","","","",""],["R0102",3,6,20,8,15,10,"","","","","",""],["R0103",3,7,21,9,21,15,"","","","","",""],["R0104",3,7,22,9,21,15,"","","","","",""],["R0105",3,7,23,9,13,8,"abs","","","","",""],["R0106",3,7,24,9,21,15,"","","","","",""],["R0107",3,7,25,9,21,15,"","","","","",""],["R0108",3,8,26,10,14,0,"","","","","",""],["R0109",4,0,0,0,0,0,"","","","","",""],["R0110",4,1,1,0,0,0,"","","","","",""],["R0111",4,2,2,1,17,16,"","","","","",""],["R0112",4,2,3,1,17,16,"","","","","",""],["R0113",4,2,4,1,17,16,"","","","","",""],["R0114",4,2,5,1,17,16,"","","","","",""],["R0115",4,1,6,2,3,3,"","","","","",""],["R0116",4,0,7,3,4,4,"","","","","",""],["R0117",4,0,8,3,4,4,"","","","","",""],["R0118",4,1,9,3,18,13,"","","","","",""],["R0119",4,1,10,3,5,13,"","","","","",""],["R0120",4,0,11,4,4,6,"","","","","",""],["R0121",4,0,12,4,4,6,"","","","","",""],["R0122",4,1,13,5,7,7,"","","","","",""],["R0123",4,3,14,6,8,8,"trip","","","","",""],["R0124",4,4,15,7,20,14,"","","","","",""],["R0125",4,4,16,7,20,14,"","","","","",""],["R0126",4,4,17,7,20,14,"","","","","",""],["R0127",4,5,18,8,10,10,"","","","","",""],["R0128",4,6,19,8,11,10,"","","","","",""],["R0129",4,6,20,8,11,10,"","","","","",""],["R0130",4,7,21,9,22,15,"","","","","",""],["R0131",4,7,22,9,22,15,"","","","","",""],["R0132",4,7,23,9,13,8,"abs","","","","",""],["R0133",4,7,24,9,22,15,"","","","","",""],["R0134",4,7,25,9,22,15,"","","","","",""],["R0135",4,8,26,10,14,0,"","","","","",""],["R0136",5,0,0,0,0,0,"","","","","",""],["R0137",5,1,1,0,23,8,"trip","","","","",""],["R0138",5,0,7,3,4,4,"","","","","",""],["R0139",5,0,8,3,4,4,"","","","","",""],["R0140",5,1,9,3,23,8,"trip","","","","",""],["R0141",5,1,10,3,23,8,"trip","","","","",""],["R0142",5,0,11,4,4,6,"","","","","",""],["R0143",5,0,12,4,4,6,"","","","","",""],["R0144",5,1,13,5,23,8,"trip","","","","",""],["R0145",6,0,0,0,0,0,"","","","","",""],["R0146",6,1,1,0,23,8,"trip","","","","",""],["R0147",6,0,7,3,4,4,"","","","","",""],["R0148",6,0,8,3,4,4,"","","","","",""],["R0149",6,1,9,3,23,8,"trip","","","","",""],["R0150",6,1,10,3,23,8,"trip","","","","",""],["R0151",6,0,11,4,4,6,"","","","","",""],["R0152",6,0,12,4,4,6,"","","","","",""],["R0153",6,1,13,5,23,7,"trip","","","","",""],["R0154",7,0,0,0,0,0,"","","","","",""],["R0155",7,1,1,0,0,0,"","","","","",""],["R0156",7,2,2,1,24,17,"","","","","",""],["R0157",7,2,3,1,24,17,"","","","","",""],["R0158",7,2,4,1,24,17,"","","","","",""],["R0159",7,2,5,1,24,17,"","","","","",""],["R0160",7,1,27,2,25,3,"","","","","",""],["R0161",7,1,6,2,25,3,"","","","","",""],["R0162",7,0,7,3,26,2,"","","","","",""],["R0163",7,0,8,3,26,2,"","","","","",""],["R0164",7,1,9,3,18,4,"","","","","",""],["R0165",7,1,10,3,27,4,"","","","","",""],["R0166",7,0,11,4,26,2,"","","","","",""],["R0167",7,0,12,4,26,2,"","","","","",""],["R0168",7,1,13,5,7,7,"","","","","",""],["R0169",7,3,14,6,28,18,"","","","","",""],["R0170",7,3,28,6,29,8,"","","","","",""],["R0171",7,4,15,7,20,14,"","","","","",""],["R0172",7,4,16,7,20,14,"","","","","",""],["R0173",7,4,17,7,20,14,"","","","","",""],["R0174",7,5,18,8,10,10,"","","","","",""],["R0175",7,6,19,8,11,10,"","","","","",""],["R0176",7,6,20,8,11,10,"","","","","",""],["R0177",7,7,21,9,30,19,"","","","","",""],["R0178",7,7,22,9,30,19,"","","","","",""],["R0179",7,7,23,9,13,8,"abs","","","","",""],["R0180",7,7,24,9,30,19,"","","","","",""],["R0181",7,7,25,9,30,19,"","","","","",""],["R0182",7,8,26,10,14,0,"","","","","",""],["R0183",8,0,0,0,0,0,"","","","","",""],["R0184",8,1,1,0,0,0,"","","","","",""],["R0185",8,2,2,1,24,17,"","","","","",""],["R0186",8,2,3,1,24,17,"","","","","",""],["R0187",8,2,4,1,24,17,"","","","","",""],["R0188",8,2,5,1,24,17,"","","","","",""],["R0189",8,1,27,2,25,3,"","","","","",""],["R0190",8,1,6,2,25,3,"","","","","",""],["R0191",8,0,7,3,26,2,"","","","","",""],["R0192",8,0,8,3,26,2,"","","","","",""],["R0193",8,1,9,3,18,4,"","","","","",""],["R0194",8,1,10,3,18,4,"","","","","",""],["R0195",8,0,11,4,26,2,"","","","","",""],["R0196",8,0,12,4,26,2,"","","","","",""],["R0197",8,1,13,5,7,7,"","","","","",""],["R0198",8,3,14,6,31,18,"","","","","",""],["R0199",8,3,28,6,29,8,"","","","","",""],["R0200",8,4,15,7,20,0,"","","","","",""],["R0201",8,4,16,7,20,0,"","","","","",""],["R0202",8,4,17,7,20,0,"","","","","",""],["R0203",8,5,18,8,10,10,"","","","","",""],["R0204",8,6,19,8,15,10,"","","","","",""],["R0205",8,6,20,8,15,10,"","","","","",""],["R0206",8,7,21,9,32,20,"","","","","",""],["R0207",8,7,22,9,32,20,"","","","","",""],["R0208",8,7,23,9,13,8,"abs","","","","",""],["R0209",8,7,24,9,32,20,"","","","","",""],["R0210",8,7,25,9,32,20,"","","","","",""],["R0211",8,8,26,10,14,0,"","","","","",""],["R0212",9,0,0,0,0,3,"","","","","",""],["R0213",9,1,1,0,0,3,"","","","","",""],["R0214",9,2,2,1,24,17,"","","","","",""],["R0215",9,2,3,1,24,17,"","","","","",""],["R0216",9,2,4,1,24,17,"","","","","",""],["R0217",9,2,5,1,24,17,"","","","","",""],["R0218",9,1,27,2,25,3,"","","","","",""],["R0219",9,1,6,2,25,3,"","","","","",""],["R0220",9,0,7,3,33,4,"","","","","",""],["R0221",9,0,8,3,33,4,"","","","","",""],["R0222",9,1,9,3,18,13,"","","","","",""],["R0223",9,1,10,3,18,13,"","","","","",""],["R0224",9,0,11,4,33,4,"","","","","",""],["R0225",9,0,12,4,33,4,"","","","","",""],["R0226",9,1,13,5,7,7,"","","","","",""],["R0227",9,3,14,6,34,0,"","","","","",""],["R0228",9,3,28,6,29,8,"","","","","",""],["R0229",9,4,15,7,20,0,"","","","","",""],["R0230",9,4,16,7,20,0,"","","","","",""],["R0231",9,4,17,7,20,0,"","","","","",""],["R0232",9,5,18,8,10,10,"","","","","",""],["R0233",9,6,19,8,15,10,"","","","","",""],["R0234",9,6,20,8,15,10,"","","","","",""],["R0235",9,7,21,9,35,21,"","","","","",""],["R0236",9,7,22,9,35,21,"","","","","",""],["R0237",9,7,23,9,13,8,"abs","","","","",""],["R0238",9,7,24,9,35,21,"","","","","",""],["R0239",9,7,25,9,35,21,"","","","","",""],["R0240",9,8,26,10,14,0,"","","","","",""],["R0241",10,0,0,0,0,3,"","","","","",""],["R0242",10,1,1,0,0,3,"","","","","",""],["R0243",10,2,2,1,24,17,"","","","","",""],["R0244",10,2,3,1,24,17,"","","","","",""],["R0245",10,2,4,1,24,17,"","","","","",""],["R0246",10,2,5,1,24,17,"","","","","",""],["R0247",10,1,27,2,25,3,"","","","","",""],["R0248",10,1,6,2,25,3,"","","","","",""],["R0249",10,0,7,3,33,4,"","","","","",""],["R0250",10,0,8,3,33,4,"","","","","",""],["R0251",10,1,9,3,4,13,"","","","","",""],["R0252",10,1,10,3,18,13,"","","","","",""],["R0253",10,0,11,4,33,4,"","","","","",""],["R0254",10,0,12,4,33,4,"","","","","",""],["R0255",10,1,13,5,7,7,"","","","","",""],["R0256",10,3,14,6,36,0,"","","","","",""],["R0257",10,3,28,6,29,8,"","","","","",""],["R0258",10,4,15,7,20,0,"","","","","",""],["R0259",10,4,16,7,20,0,"","","","","",""],["R0260",10,4,17,7,20,0,"","","","","",""],["R0261",10,5,18,8,10,10,"","","","","",""],["R0262",10,6,19,8,15,10,"","","","","",""],["R0263",10,6,20,8,15,10,"","","","","",""],["R0264",10,7,21,9,35,21,"","","","","",""],["R0265",10,7,22,9,35,21,"","","","","",""],["R0266",10,7,23,9,13,8,"abs","","","","",""],["R0267",10,7,24,9,35,21,"","","","","",""],["R0268",10,7,25,9,35,21,"","","","","",""],["R0269",10,8,26,10,14,0,"","","","","",""],["R0270",11,0,0,0,0,3,"","","","","",""],["R0271",11,1,1,0,0,3,"","","","","",""],["R0272",11,2,2,1,24,17,"","","","","",""],["R0273",11,2,3,1,24,17,"","","","","",""],["R0274",11,2,4,1,24,17,"","","","","",""],["R0275",11,2,5,1,24,17,"","","","","",""],["R0276",11,1,27,2,25,3,"","","","","",""],["R0277",11,1,6,2,25,3,"","","","","",""],["R0278",11,0,7,3,33,4,"","","","","",""],["R0279",11,0,8,3,33,4,"","","","","",""],["R0280",11,1,9,3,4,13,"","","","","",""],["R0281",11,1,10,3,18,13,"","","","","",""],["R0282",11,0,11,4,33,4,"","","","","",""],["R0283",11,0,12,4,33,4,"","","","","",""],["R0284",11,1,13,5,7,7,"","","","","",""],["R0285",11,3,14,6,36,0,"","","","","",""],["R0286",11,3,28,6,29,8,"","","","","",""],["R0287",11,4,15,7,20,0,"","","","","",""],["R0288",11,4,16,7,20,0,"","","","","",""],["R0289",11,4,17,7,20,0,"","","","","",""],["R0290",11,5,18,8,10,10,"","","","","",""],["R0291",11,6,19,8,11,10,"","","","","",""],["R0292",11,6,20,8,11,10,"","","","","",""],["R0293",11,7,21,9,37,22,"","","","","",""],["R0294",11,7,22,9,37,22,"","","","","",""],["R0295",11,7,23,9,13,8,"abs","","","","",""],["R0296",11,7,24,9,37,22,"","","","","",""],["R0297",11,7,25,9,37,22,"","","","","",""],["R0298",11,8,26,10,14,0,"","","","","",""],["R0299",12,0,0,0,8,8,"trip","","","","",""],["R0300",12,0,7,3,8,4,"trip","","","","",""],["R0301",12,0,8,3,8,4,"trip","","","","",""],["R0302",12,0,11,4,8,6,"trip","","","","",""],["R0303",12,0,12,4,8,6,"trip","","","","",""],["R0304",12,1,13,5,7,7,"","","","","",""],["R0305",12,3,14,6,36,0,"","","","","",""],["R0306",12,3,28,6,29,8,"","","","","",""],["R0307",13,0,0,0,8,8,"trip","","","","",""],["R0308",13,0,7,3,8,4,"trip","","","","",""],["R0309",13,0,8,3,8,4,"trip","","","","",""],["R0310",13,0,11,4,8,6,"trip","","","","",""],["R0311",13,0,12,4,8,6,"trip","","","","",""],["R0312",13,1,13,5,7,7,"","","","","",""],["R0313",13,3,14,6,36,0,"","","","","",""],["R0314",13,3,28,6,29,8,"","","","","",""]],"issues":[{"id":"P001","date":"2026-08-24","ditta":"RICCI","zona":"VILLA","cat":"MANODOPERA","desc":"Serban Florentin non partito da Roma: ancora impegnato al cantiere Vergini","eff":"Ritardo critico sull'impermeabilizzazione della Villa","grav":"CRITICA","act":"Contattato DTC Vergini F. Ricci: concordata partenza per giovedì","own":"F. RICCI / DTC","due":"2026-08-27","st":"IN CORSO"},{"id":"P002","date":"2026-08-24","ditta":"BARBETTI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Impianto di betonaggio chiuso: riapre il 31/08/26","eff":"Getti e massetti non programmabili prima del 31/08","grav":"ALTA","act":"Ordinare magrone con pompino per mercoledì 2 settembre","own":"CAPOCANTIERE","due":"2026-08-31","st":"IN CORSO"},{"id":"P003","date":"2026-08-24","ditta":"MARZINI","zona":"TUTTO IL CANTIERE","cat":"MATERIALI / FORNITURE","desc":"Massetto in giacenza pari a 0; in arrivo 20 bancali in settimana","eff":"Rischio fermo della squadra massetti EDIL EG","grav":"MEDIA","act":"Sollecitare consegna e confermare data di arrivo","own":"CAPOCANTIERE","due":"2026-08-28","st":"APERTO"}],"rev":3}</script>
 <script id="app-src">(function () {
   "use strict";
   var S = JSON.parse(document.getElementById("state").textContent);
@@ -249,7 +286,25 @@ window.SUVERA_SYNC = {
   var STL = { ok: "Eseguita", part: "Parziale", ko: "Non eseguita", abs: "Assente", trip: "Trasferta", na: "N/A" };
 
   // row: [id, day, ditta, ope, squ, att, zon, st, cat, desc, az]
-  var R = { ID: 0, D: 1, F: 2, O: 3, Q: 4, A: 5, Z: 6, ST: 7, CAT: 8, DESC: 9, AZ: 10 };
+  var R = { ID: 0, D: 1, F: 2, O: 3, Q: 4, A: 5, Z: 6, ST: 7, CAT: 8, DESC: 9, AZ: 10,
+    RD: 11, RS: 12 };
+  S.rows.forEach(function (r) { while (r.length < 13) r.push(""); });
+
+  function oggi() {
+    var d = new Date();
+    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+  }
+  function giorniDa(iso) {
+    return Math.round((new Date(iso + "T12:00:00") - new Date(oggi() + "T12:00:00")) / 86400000);
+  }
+  function recuperi() {
+    return S.rows.filter(function (r) {
+      return (r[R.ST] === "ko" || r[R.ST] === "part") && r[R.RS] !== "ok";
+    });
+  }
+  function scaduti() {
+    return recuperi().filter(function (r) { return r[R.RD] && giorniDa(r[R.RD]) < 0; });
+  }
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -279,7 +334,9 @@ window.SUVERA_SYNC = {
 
   /* ------------------------------------------------ header */
   function hTop() {
-    var tabs = [["day", "Giornata"], ["firm", "Ditte"], ["iss", "Criticità"], ["trend", "Andamento"]];
+    var nsc = scaduti().length;
+    var tabs = [["day", "Giornata"], ["rec", "Recuperi"], ["firm", "Ditte"],
+      ["iss", "Criticità"], ["trend", "Andamento"]];
     return '<header class="top"><div class="top-in">' +
       '<div class="brand"><h1>La Suvera</h1>' +
       '<span class="sub">Pievescola &middot; monitoraggio programma</span>' +
@@ -287,7 +344,8 @@ window.SUVERA_SYNC = {
       "</div>" +
       '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
         return '<button class="tab" role="tab" data-tab="' + t[0] + '" aria-selected="' +
-          (view.tab === t[0]) + '">' + t[1] + "</button>";
+          (view.tab === t[0]) + '">' + t[1] +
+          (t[0] === "rec" && nsc ? '<span class="badge">' + nsc + "</span>" : "") + "</button>";
       }).join("") + "</nav></div></header>";
   }
 
@@ -322,7 +380,14 @@ window.SUVERA_SYNC = {
   /* ------------------------------------------------ day view */
   function hDay() {
     var rs = rowsOf(view.day), t = tally(rs), h = "";
-    h += hDays() + hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t);
+    var nsc = scaduti().length;
+    h += hDays();
+    if (nsc) {
+      h += '<button class="alert" data-tab="rec">' + nsc +
+        (nsc === 1 ? " recupero scaduto" : " recuperi scaduti") +
+        " &mdash; vedi la scheda Recuperi</button>";
+    }
+    h += hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t);
     if (!rs.length) return h + '<div class="card empty">Nessuna attività programmata in questa data.</div>';
     var byQ = {};
     rs.forEach(function (r) { (byQ[r[R.Q]] = byQ[r[R.Q]] || []).push(r); });
@@ -363,9 +428,79 @@ window.SUVERA_SYNC = {
         '" placeholder="Es. materiale non consegnato; slitta il getto di giovedì">' + esc(r[R.DESC]) + "</textarea></div>" +
         '<div><label for="a-' + r[R.ID] + '">Cosa si fa per recuperare</label>' +
         '<textarea id="a-' + r[R.ID] + '" data-act="az" data-id="' + r[R.ID] +
-        '" placeholder="Es. sollecitato fornitore, recupero sabato">' + esc(r[R.AZ]) + "</textarea></div></div>";
+        '" placeholder="Es. sollecitato fornitore, recupero sabato">' + esc(r[R.AZ]) + "</textarea></div>" +
+        '<div><label for="r-' + r[R.ID] + '">Recuperare entro</label>' +
+        '<input type="date" id="r-' + r[R.ID] + '" data-act="rd" data-id="' + r[R.ID] +
+        '" value="' + esc(r[R.RD]) + '"></div></div>';
     }
     return h + "</article>";
+  }
+
+  /* ------------------------------------------------ recuperi */
+  function hRecCard(r, stato) {
+    var gg2 = r[R.RD] ? giorniDa(r[R.RD]) : null;
+    var quando = gg2 === null ? "senza data"
+      : gg2 < 0 ? "scaduto da " + (-gg2) + (gg2 === -1 ? " giorno" : " giorni")
+        : gg2 === 0 ? "entro oggi"
+          : gg2 === 1 ? "entro domani" : "fra " + gg2 + " giorni";
+    return '<article class="card rec ' + stato + '">' +
+      '<div class="who"><span class="name">' + esc(S.ope[r[R.O]]) +
+      '</span><span class="firm">' + esc(S.dit[r[R.F]]) + "</span></div>" +
+      '<div class="task">' + esc(S.att[r[R.A]]) + "</div>" +
+      '<div class="zoneline"><span class="zone">' + esc(S.zon[r[R.Z]]) + "</span>" +
+      '<span class="tag ' + (r[R.ST] === "ko" ? "ko" : "part") + '">' + STL[r[R.ST]] + "</span>" +
+      '<span class="tag">saltata ' + dmy(S.days[r[R.D]]) + "</span></div>" +
+      (r[R.AZ] ? '<p class="promessa">' + esc(r[R.AZ]) + "</p>" : "") +
+      '<div class="recline"><span class="quando">' + quando + "</span>" +
+      '<input type="date" data-act="rd" data-id="' + r[R.ID] + '" value="' + esc(r[R.RD]) + '">' +
+      '<button data-act="rec-ok" data-id="' + r[R.ID] + '">Recuperato</button></div></article>';
+  }
+
+  function hRec() {
+    var open = recuperi();
+    var late = [], soon = [], nodate = [];
+    open.forEach(function (r) {
+      if (!r[R.RD]) nodate.push(r);
+      else if (giorniDa(r[R.RD]) < 0) late.push(r);
+      else soon.push(r);
+    });
+    var byDate = function (a, b) { return a[R.RD] < b[R.RD] ? -1 : 1; };
+    late.sort(byDate); soon.sort(byDate);
+    var done = S.rows.filter(function (r) { return r[R.RS] === "ok"; });
+
+    var h = '<h2 class="sectionhead">Recuperi</h2>' +
+      '<div class="tiles"><div class="tile ko"><b>' + late.length + "</b><span>Scaduti</span></div>" +
+      '<div class="tile part"><b>' + soon.length + "</b><span>In scadenza</span></div>" +
+      '<div class="tile idle"><b>' + nodate.length + "</b><span>Senza data</span></div>" +
+      '<div class="tile ok"><b>' + done.length + "</b><span>Recuperati</span></div></div>";
+
+    if (!open.length && !done.length) {
+      return h + '<div class="card empty">Nessun recupero in sospeso: tutte le attività ' +
+        "segnate finora sono state eseguite.</div>";
+    }
+    if (late.length) {
+      h += '<h3 class="rechead ko">In ritardo &mdash; da sollecitare oggi</h3>';
+      late.forEach(function (r) { h += hRecCard(r, "late"); });
+    }
+    if (soon.length) {
+      h += '<h3 class="rechead">In scadenza</h3>';
+      soon.forEach(function (r) { h += hRecCard(r, "soon"); });
+    }
+    if (nodate.length) {
+      h += '<h3 class="rechead">Senza una data &mdash; metterne una</h3>';
+      nodate.forEach(function (r) { h += hRecCard(r, "nodate"); });
+    }
+    if (done.length) {
+      h += '<h3 class="rechead ok">Recuperati</h3>';
+      done.slice(-12).forEach(function (r) {
+        h += '<article class="card rec done"><div class="who"><span class="name">' +
+          esc(S.ope[r[R.O]]) + '</span><span class="firm">' + esc(S.dit[r[R.F]]) + "</span></div>" +
+          '<div class="task">' + esc(S.att[r[R.A]]) + "</div>" +
+          '<div class="recline"><span class="quando">recuperato</span>' +
+          '<button data-act="rec-no" data-id="' + r[R.ID] + '">Annulla</button></div></article>';
+      });
+    }
+    return h;
   }
 
   /* ------------------------------------------------ firms */
@@ -484,8 +619,8 @@ window.SUVERA_SYNC = {
   /* ------------------------------------------------ shell */
   function render(keepScroll) {
     var y = window.scrollY;
-    var body = view.tab === "day" ? hDay() : view.tab === "firm" ? hFirm() :
-      view.tab === "iss" ? hIss() : hTrend();
+    var body = view.tab === "day" ? hDay() : view.tab === "rec" ? hRec() :
+      view.tab === "firm" ? hFirm() : view.tab === "iss" ? hIss() : hTrend();
     app.innerHTML = hTop() + '<main class="wrap">' +
       (readOnly
         ? '<p class="notice">Sola lettura: puoi consultare l&rsquo;avanzamento ma non registrare ' +
@@ -527,6 +662,11 @@ window.SUVERA_SYNC = {
       if (readOnly) return;
       S.issues.forEach(function (p) { if (p.id === el.dataset.id) p.st = el.dataset.v; });
       dirty++; touch(null); render(true);
+    } else if (a === "rec-ok" || a === "rec-no") {
+      if (readOnly) return;
+      var rr = byId(el.dataset.id); if (!rr) return;
+      rr[R.RS] = a === "rec-ok" ? "ok" : "";
+      dirty++; touch(rr); render(true);
     } else if (a === "table") { view.table = !view.table; render(true); }
     else if (a === "csv") { csv(); }
     else if (a === "wa") { sendReport(); }
@@ -539,6 +679,7 @@ window.SUVERA_SYNC = {
     if (a === "cat") { r[R.CAT] = el.value; dirty++; }
     else if (a === "desc") { r[R.DESC] = el.value; dirty++; }
     else if (a === "az") { r[R.AZ] = el.value; dirty++; }
+    else if (a === "rd") { r[R.RD] = el.value; dirty++; touch(r); render(true); return; }
     touch(r);
     var bar = document.querySelector(".savebar");
     if (bar) {
@@ -631,15 +772,7 @@ window.SUVERA_SYNC = {
   function hashWrite() {
     if (shared) return;
     try {
-      var s = S.rows.map(function (r) { return CODE[r[R.ST]] || "-"; }).join("");
-      var texts = [];
-      S.rows.forEach(function (r, i) {
-        if (r[R.CAT] || r[R.DESC] || r[R.AZ]) texts.push([i, r[R.CAT], r[R.DESC], r[R.AZ]]);
-      });
-      var iss = {};
-      S.issues.forEach(function (p) { iss[p.id] = p.st; });
-      var pack = { v: 1, s: rle(s), t: texts, i: iss };
-      history.replaceState(null, "", "#d=" + encodeURIComponent(JSON.stringify(pack)));
+      history.replaceState(null, "", "#d=" + encodeURIComponent(JSON.stringify(pack())));
     } catch (e) { /* indirizzo troppo lungo o non modificabile: si continua senza */ }
   }
 
@@ -656,7 +789,10 @@ window.SUVERA_SYNC = {
       });
       (pack.t || []).forEach(function (t) {
         var r = S.rows[t[0]];
-        if (r) { r[R.CAT] = t[1] || ""; r[R.DESC] = t[2] || ""; r[R.AZ] = t[3] || ""; }
+        if (r) {
+          r[R.CAT] = t[1] || ""; r[R.DESC] = t[2] || ""; r[R.AZ] = t[3] || "";
+          r[R.RD] = t[4] || ""; r[R.RS] = t[5] || "";
+        }
       });
       S.issues.forEach(function (p) { if (pack.i && pack.i[p.id]) p.st = pack.i[p.id]; });
       return true;
@@ -668,7 +804,9 @@ window.SUVERA_SYNC = {
     var s = S.rows.map(function (r) { return CODE[r[R.ST]] || "-"; }).join("");
     var texts = [];
     S.rows.forEach(function (r, i) {
-      if (r[R.CAT] || r[R.DESC] || r[R.AZ]) texts.push([i, r[R.CAT], r[R.DESC], r[R.AZ]]);
+      if (r[R.CAT] || r[R.DESC] || r[R.AZ] || r[R.RD] || r[R.RS]) {
+        texts.push([i, r[R.CAT], r[R.DESC], r[R.AZ], r[R.RD], r[R.RS]]);
+      }
     });
     var iss = {};
     S.issues.forEach(function (p) { iss[p.id] = p.st; });
@@ -690,6 +828,8 @@ window.SUVERA_SYNC = {
       r[R.CAT] = t ? (t[1] || "") : "";
       r[R.DESC] = t ? (t[2] || "") : "";
       r[R.AZ] = t ? (t[3] || "") : "";
+      r[R.RD] = t ? (t[4] || "") : "";
+      r[R.RS] = t ? (t[5] || "") : "";
     });
     S.issues.forEach(function (q) { if (p.i && p.i[q.id]) q.st = p.i[q.id]; });
   }
@@ -817,6 +957,15 @@ window.SUVERA_SYNC = {
       L.push("");
       L.push("*Assenti*: " + ab.map(function (r) { return S.ope[r[R.O]]; }).join(", "));
     }
+    var sc = scaduti();
+    if (sc.length) {
+      L.push("");
+      L.push("*Recuperi scaduti*");
+      sc.forEach(function (r) {
+        L.push("• " + S.ope[r[R.O]] + " — " + S.att[r[R.A]] + " — era da recuperare entro " +
+          dmy(r[R.RD]) + " (" + (-giorniDa(r[R.RD])) + " gg fa)");
+      });
+    }
     var idle = rs.filter(function (r) { return !r[R.ST]; });
     if (idle.length) L.push("", "Righe non compilate: " + idle.length);
     return L.join("\n");
@@ -836,16 +985,38 @@ window.SUVERA_SYNC = {
   }
 
   function csv() {
-    var head = ["ID", "DATA", "GIORNO", "DITTA", "OPERAIO", "SQUADRA", "ATTIVITA PREVISTA", "ZONA",
-      "STATO", "CAUSA", "PROBLEMA / EFFETTO", "AZIONE"];
+    // stesse colonne, nello stesso ordine, del foglio REGISTRO dell'Excel:
+    // si incolla direttamente in A4 senza spostare niente.
+    var head = ["DATA", "GIORNO", "OPERAIO / RISORSA", "STATO", "ATTIVITA' PREVISTA",
+      "ZONA / PIANO", "CAUSA", "PROBLEMA RILEVATO / EFFETTO", "AZIONE DI RISOLUZIONE",
+      "ATTIVITA' EFFETTIVA (se diversa)", "% AVANZ.", "DITTA", "SQUADRA", "ID", "ID PROB.", "NOTE"];
+    var PCT = { ok: "100%", part: "50%", ko: "0%" };
     var q = function (v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
     var lines = [head.map(q).join(";")];
     S.rows.forEach(function (r) {
-      lines.push([r[R.ID], S.days[r[R.D]].split("-").reverse().join("/"), ggl(S.days[r[R.D]]),
-        S.dit[r[R.F]], S.ope[r[R.O]], S.squ[r[R.Q]], S.att[r[R.A]], S.zon[r[R.Z]],
-        STL[r[R.ST]] || "DA COMPILARE", r[R.CAT], r[R.DESC], r[R.AZ]].map(q).join(";"));
+      var note = "";
+      if (r[R.RD]) note = "Recupero entro " + dmy(r[R.RD]);
+      if (r[R.RS] === "ok") note = (note ? note + " — " : "") + "RECUPERATO";
+      lines.push([
+        S.days[r[R.D]].split("-").reverse().join("/"),
+        ggl(S.days[r[R.D]]),
+        S.ope[r[R.O]],
+        STL[r[R.ST]] ? STL[r[R.ST]].toUpperCase() : "DA COMPILARE",
+        S.att[r[R.A]],
+        S.zon[r[R.Z]],
+        r[R.CAT],
+        r[R.DESC],
+        r[R.AZ],
+        "",
+        PCT[r[R.ST]] || "",
+        S.dit[r[R.F]],
+        S.squ[r[R.Q]],
+        r[R.ID],
+        "",
+        note
+      ].map(q).join(";"));
     });
-    var data = "﻿" + lines.join("\r\n");
+    var data = "\ufeff" + lines.join("\r\n");
     (window.claude && window.claude.use ? window.claude.use("downloads") : Promise.resolve(null))
       .then(function (dl) {
         if (!dl) throw 0;
