@@ -433,7 +433,6 @@ body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
 /* ---------- report stampabile ---------- */
 #report,#rda{display:none}
 @media print{
-  @page{size:A4 landscape;margin:12mm}
   body{background:#fff;color:#111;font-size:10pt}
   .top,.wrap,.savebar,.toast,.alert{display:none !important}
   #report{display:block;max-width:none;padding:0}
@@ -471,26 +470,34 @@ body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
   #rda h1{font-family:"Barlow Condensed",Arial,sans-serif;font-size:20pt;text-transform:uppercase;
     letter-spacing:.03em;color:#14403C;margin:0}
   #rda .rdahead p{margin:2px 0 0;font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:#555}
-  #rda .rdatop{display:grid;grid-template-columns:repeat(3,1fr);gap:0 14px;margin-bottom:10px}
+  #rda .rdatop{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-bottom:9px}
   #rda .rf{display:flex;gap:6px;align-items:baseline;border-bottom:1px dotted #BBB;padding:3px 0}
   #rda .rf span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#666;
     min-width:34mm}
   #rda .rf b{font-size:10pt;font-weight:600}
-  #rda .rdaind{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+  #rda .rdaind{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:9px}
+  #rda .rdaentro{display:flex;align-items:baseline;gap:8px;margin-bottom:11px;
+    border:1px solid #B9C0BA;background:#EDEFEA;padding:4px 8px}
+  #rda .rdaentro span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#555}
+  #rda .rdaentro b{font-size:11pt}
   #rda .rdaind h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:9.5pt;
     text-transform:uppercase;letter-spacing:.08em;color:#14403C;margin:0 0 3px;
     border-bottom:1px solid #DDD;padding-bottom:2px}
   #rda .rdaind p{margin:0;font-size:9.5pt;line-height:1.35}
   #rda table.rdatab{width:100%;border-collapse:collapse;font-size:9pt}
-  #rda .rdatab th{background:#EDEFEA;border:1px solid #B9C0BA;padding:4px 5px;text-align:left;
-    font-family:"Barlow Condensed",Arial,sans-serif;font-size:8pt;text-transform:uppercase;
-    letter-spacing:.06em}
+  #rda .rdatab th{background:#EDEFEA;border:1px solid #B9C0BA;padding:4px 4px;text-align:left;
+    font-family:"Barlow Condensed",Arial,sans-serif;font-size:7.4pt;text-transform:uppercase;
+    letter-spacing:.02em;line-height:1.15}
   #rda .rdatab td{border:1px solid #CFD5D0;padding:3px 5px;height:5.6mm;vertical-align:top}
-  #rda .rdatab td:nth-child(1){width:14mm}
-  #rda .rdatab td:nth-child(3){width:16mm}
-  #rda .rdatab td:nth-child(4),#rda .rdatab td:nth-child(5),
-  #rda .rdatab td:nth-child(6),#rda .rdatab td:nth-child(7){width:18mm;text-align:right}
-  #rda .rdafirme{display:flex;gap:30mm;margin-top:7mm;font-size:9pt;color:#444;
+  #rda .rdatab td:nth-child(1),#rda .rdatab th:nth-child(1){width:12mm}
+  #rda .rdatab td:nth-child(3),#rda .rdatab th:nth-child(3){width:13mm}
+  #rda .rdatab td:nth-child(4),#rda .rdatab th:nth-child(4){width:18mm;text-align:right}
+  #rda .rdatab td:nth-child(5),#rda .rdatab th:nth-child(5){width:17mm;text-align:right}
+  #rda .rdatab td:nth-child(6),#rda .rdatab th:nth-child(6){width:15mm;text-align:right}
+  #rda .rdatab td:nth-child(7),#rda .rdatab th:nth-child(7){width:19mm;text-align:right}
+  #rda .rdatab{table-layout:fixed}
+  #rda .rdatab td:nth-child(2){word-break:break-word}
+  #rda .rdafirme{display:flex;gap:16mm;margin-top:8mm;font-size:9pt;color:#444;
     page-break-inside:avoid}
   #rda .rdafirme div{flex:1;border-top:1px solid #999;padding-top:3px}
   #rda .rdaris{margin-top:6mm;border:1px solid #CFD5D0;padding:5px 8px;page-break-inside:avoid}
@@ -1173,7 +1180,7 @@ window.SUVERA_SYNC = {
     if (rdaSel) voci = voci.filter(function (x) { return x.k === rdaSel; });
     var oggiIt = oggi().split("-").reverse().join("/");
     var entro = voci.map(function (x) { return x.m.entro; }).filter(Boolean).sort()[0];
-    var righe = Math.min(26, Math.max(voci.length + 3, 9));
+    var righe = Math.min(26, Math.max(voci.length + 4, 14));
     var body = "";
     for (var i = 0; i < righe; i++) {
       var v = voci[i];
@@ -1190,20 +1197,21 @@ window.SUVERA_SYNC = {
       "<p>Da consegnare all&rsquo;ufficio acquisti</p></div>" +
       '<div class="rdatop">' +
       "<div>" + campo("RDA n&deg;", S.rdaN || RDA.numero || "") +
+      campo("Data", oggiIt) +
       campo("Trasmesso a mezzo", RDA.mezzo || "e-mail") +
       campo("C.a.", "Ufficio Acquisti") + "</div>" +
-      "<div>" + campo("Commessa", RDA.commessa || "") + campo("Data", oggiIt) +
-      campo("Responsabile", RDA.responsabile || "") + "</div>" +
-      "<div>" + campo("Cantiere", NOME) + campo("Recapito", RDA.recapito || "") +
+      "<div>" + campo("Commessa", RDA.commessa || "") +
+      campo("Cantiere", NOME) +
+      campo("Responsabile", RDA.responsabile || "") +
       campo("Priorit&agrave;", RDA.priorita || "Normale") + "</div>" +
       "</div>" +
       '<div class="rdaind"><div><h2>Indirizzo cantiere</h2><p>' +
       esc(RDA.indirizzo || "") + "<br>" + esc(RDA.citta || "") + "</p></div>" +
       "<div><h2>Indirizzo consegna materiale</h2><p>" +
       esc(RDA.consegna_indirizzo || RDA.indirizzo || "") + "<br>" +
-      esc(RDA.consegna_citta || RDA.citta || "") + "</p></div>" +
-      "<div><h2>Consegna entro</h2><p>" +
-      (entro ? entro.split("-").reverse().join("/") : "&mdash;") + "</p></div></div>" +
+      esc(RDA.consegna_citta || RDA.citta || "") + "</p></div></div>" +
+      '<div class="rdaentro"><span>Consegna entro</span><b>' +
+      (entro ? entro.split("-").reverse().join("/") : "&mdash;") + "</b></div>" +
       '<table class="rdatab"><thead><tr><th>WBS</th><th>Descrizione materiale</th>' +
       "<th>um</th><th>Quantit&agrave;</th><th>Unitario</th><th>Sconto</th><th>Imp. totale</th>" +
       "</tr></thead><tbody>" + body + "</tbody></table>" +
@@ -1214,11 +1222,21 @@ window.SUVERA_SYNC = {
       "<p>Annotazioni:</p></div></div>";
   }
 
+  var stileFoglio = null;
+  function orienta(modo) {
+    if (!stileFoglio) {
+      stileFoglio = document.createElement("style");
+      document.body.appendChild(stileFoglio);
+    }
+    stileFoglio.textContent = "@media print{@page{size:A4 " + modo + ";margin:11mm}}";
+  }
+
   var stampaInCorso = false;
   function stampaRda(chiave) {
     if (stampaInCorso) return;
     stampaInCorso = true;
     rdaSel = chiave || null;
+    orienta("portrait");
     document.body.classList.add("print-rda");
     render(true);
     setTimeout(function () {
@@ -1235,6 +1253,7 @@ window.SUVERA_SYNC = {
   function stampaReport() {
     if (stampaInCorso) return;
     stampaInCorso = true;
+    orienta("landscape");
     if (document.body.classList.contains("print-rda")) {
       document.body.classList.remove("print-rda");
       rdaSel = null;
@@ -1983,6 +2002,7 @@ window.SUVERA_SYNC = {
 
   /* ------------------------------------------------ avvio */
   function avvia() {
+    orienta("landscape");
     if (!SY.on) hashRead();
     var iOggi = S.days.indexOf(oggi());
     if (iOggi >= 0) {
