@@ -325,6 +325,44 @@ table.data td:first-child{font-family:"IBM Plex Sans",sans-serif}
   .crow{grid-template-columns:56px 1fr 40px}
 }
 
+/* ---------- accesso ---------- */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;
+  background:var(--top-bg)}
+.login-card{width:100%;max-width:360px;background:var(--surface);border-radius:14px;
+  padding:26px 22px 22px;box-shadow:0 12px 40px rgba(0,0,0,.28)}
+.login-card h1{font-size:26px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.login-sub{margin:4px 0 18px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3)}
+.login-card label{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);margin:12px 0 4px}
+.login-card input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+.login-card input:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+.login-card button{width:100%;margin-top:18px;appearance:none;cursor:pointer;
+  font:600 13px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  padding:13px;border-radius:8px;border:0;background:var(--top-bg);color:#fff}
+:root[data-theme="dark"] .login-card button,
+:root:not([data-theme="light"]) .login-card button{background:var(--accent);color:var(--accent-ink)}
+.login-card button[disabled]{opacity:.6;cursor:default}
+.login-err{margin:0 0 4px;padding:9px 11px;border-radius:8px;background:var(--ko-bg);
+  color:var(--ko);font-size:13px}
+.login-note{margin:14px 0 0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
+.chi-sono{appearance:none;cursor:pointer;border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.10);color:inherit;border-radius:11px;padding:3px 9px;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.02em;white-space:nowrap}
+.chi-sono:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+
+body.sola-lettura .seg button,
+body.sola-lettura .matseg button,
+body.sola-lettura .issue .acts button,
+body.sola-lettura .recline input,
+body.sola-lettura .recline button,
+body.sola-lettura .detail input,
+body.sola-lettura .detail select,
+body.sola-lettura .detail textarea,
+body.sola-lettura .rdanum,
+body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
+
 /* ---------- materiale nella riga ---------- */
 .matbox{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
 .matlab{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
@@ -496,6 +534,21 @@ window.SUVERA_SYNC = {
     touched: {}, tMat: {}, tNum: false, lastOk: 0, state: "attesa", when: ""
   };
   var CANTIERI = [];   // elenco per il menu a tendina, letto dall'archivio
+  var SESS = null;     // { token, refresh, email, nome, ruolo }
+  var loginErr = "";
+  var loginBusy = false;
+  var CHIAVE_SESS = "suvera_sess_" + CANTIERE;
+
+  function leggiSess() {
+    try { return JSON.parse(localStorage.getItem(CHIAVE_SESS) || "null"); }
+    catch (e) { return null; }
+  }
+  function salvaSess(s) {
+    try {
+      if (s) localStorage.setItem(CHIAVE_SESS, JSON.stringify(s));
+      else localStorage.removeItem(CHIAVE_SESS);
+    } catch (e) { /* archiviazione non disponibile: la sessione dura finche' la pagina resta aperta */ }
+  }
 
   function utente() {
     try {
@@ -656,6 +709,8 @@ window.SUVERA_SYNC = {
       '<div class="brand">' + testa +
       '<span class="sub">' + esc(LUOGO) + ' &middot; monitoraggio programma</span>' +
       (SY.on ? '<span class="synced s-' + SY.state + '">' + chipText() + "</span>" : "") +
+      (SESS ? '<button class="chi-sono" data-act="esci" title="Esci">' + esc(SESS.nome) +
+        (readOnly ? " &middot; sola lettura" : "") + "</button>" : "") +
       "</div>" +
       (vuoto ? "" : '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
         return '<button class="tab" role="tab" data-tab="' + t[0] + '" aria-selected="' +
@@ -718,11 +773,11 @@ window.SUVERA_SYNC = {
     h += hMeter(t, "avanzamento " + ggl(S.days[view.day]) + " " + dmy(S.days[view.day])) + hTiles(t) +
       '<div class="toolbar"><button data-act="print">Report della giornata (PDF)</button>' +
       '<button data-act="csv">Esporta CSV</button>' +
-      (chiudibile(view.day) && t.idle === 0
+      (!readOnly && chiudibile(view.day) && t.idle === 0
         ? '<span class="chiudibox"><input id="chi" data-act="chi" value="' + esc(utente()) +
           '" placeholder="il tuo nome" autocomplete="name">' +
           '<button class="chiudi" data-act="chiudi">Chiudi la giornata</button></span>' : "") +
-      (chiudibile(view.day) && t.idle > 0
+      (!readOnly && chiudibile(view.day) && t.idle > 0
         ? '<span class="chiudi-no">Restano ' + t.idle + " righe da compilare prima di chiudere</span>" : "") +
       "</div>";
     if (!rs.length) return h + '<div class="card empty">Nessuna attività programmata in questa data.</div>';
@@ -740,7 +795,7 @@ window.SUVERA_SYNC = {
 
   function hRow(r) {
     var st = r[R.ST], cls = st ? "s-" + st : "s-none";
-    var bloc = chiusa(r[R.D]);
+    var bloc = chiusa(r[R.D]) || readOnly;
     var btn = function (v, glyph, lab) {
       return '<button class="b-' + v + '" data-act="st" data-id="' + r[R.ID] + '" data-v="' + v +
         '" aria-pressed="' + (st === v) + '" aria-label="' + lab + '"' +
@@ -763,12 +818,16 @@ window.SUVERA_SYNC = {
         (r[R.CAT] ? "<div><label>Causa</label><p>" + esc(r[R.CAT]) + "</p></div>" : "") +
         (r[R.DESC] ? "<div><label>Cosa &egrave; successo</label><p>" + esc(r[R.DESC]) + "</p></div>" : "") +
         (r[R.AZ] ? "<div><label>Azione</label><p>" + esc(r[R.AZ]) + "</p></div>" : "") +
-        '<div><label for="r-' + r[R.ID] + '">Recuperare entro</label>' +
-        '<input type="date" id="r-' + r[R.ID] + '" data-act="rd" data-id="' + r[R.ID] +
-        '" value="' + esc(r[R.RD]) + '"></div>' +
-        (r[R.RS] === "ok"
-          ? '<button class="recdone" data-act="rec-no" data-id="' + r[R.ID] + '">Recuperato &mdash; annulla</button>'
-          : '<button class="recdone on" data-act="rec-ok" data-id="' + r[R.ID] + '">Segna come recuperato</button>') +
+        (readOnly
+          ? "<div><label>Recuperare entro</label><p>" +
+            (r[R.RD] ? dmy(r[R.RD]) : "da fissare") +
+            (r[R.RS] === "ok" ? " &mdash; recuperato" : "") + "</p></div>"
+          : '<div><label for="r-' + r[R.ID] + '">Recuperare entro</label>' +
+            '<input type="date" id="r-' + r[R.ID] + '" data-act="rd" data-id="' + r[R.ID] +
+            '" value="' + esc(r[R.RD]) + '"></div>' +
+            (r[R.RS] === "ok"
+              ? '<button class="recdone" data-act="rec-no" data-id="' + r[R.ID] + '">Recuperato &mdash; annulla</button>'
+              : '<button class="recdone on" data-act="rec-ok" data-id="' + r[R.ID] + '">Segna come recuperato</button>')) +
         "</div>";
     } else if (st === "ko" || st === "part") {
       h += '<div class="detail"><div><label for="c-' + r[R.ID] + '">Causa</label>' +
@@ -796,6 +855,7 @@ window.SUVERA_SYNC = {
       return '<button class="m-' + v + '" data-act="mat" data-id="' + r[R.ID] + '" data-v="' + v +
         '" aria-pressed="' + (st === v) + '">' + lab + "</button>";
     };
+    if (readOnly && !st) return "";
     var h = '<div class="matbox"><span class="matlab">Materiale</span><div class="matseg">' +
       b("ok", "In cantiere") + b("arr", "In arrivo") + b("no", "Da ordinare") + b("na", "Non serve") +
       "</div>";
@@ -1155,9 +1215,38 @@ window.SUVERA_SYNC = {
   }
   window.addEventListener("afterprint", fineStampa);
 
+  function hLogin() {
+    return '<div class="login"><div class="login-card">' +
+      "<h1>" + esc(NOME) + "</h1>" +
+      '<p class="login-sub">' + esc(LUOGO) + " &middot; registro di cantiere</p>" +
+      (loginErr ? '<p class="login-err">' + esc(loginErr) + "</p>" : "") +
+      '<label for="lg-mail">Email</label>' +
+      '<input id="lg-mail" type="email" inputmode="email" autocomplete="username" ' +
+      'autocapitalize="off" spellcheck="false">' +
+      '<label for="lg-pw">Password</label>' +
+      '<input id="lg-pw" type="password" autocomplete="current-password">' +
+      '<button data-act="entra"' + (loginBusy ? " disabled" : "") + ">" +
+      (loginBusy ? "Accesso&hellip;" : "Entra") + "</button>" +
+      '<p class="login-note">Se non hai le credenziali chiedile alla direzione tecnica. ' +
+      "L&rsquo;accesso resta valido su questo telefono: non dovrai rifarlo ogni giorno.</p>" +
+      "</div></div>";
+  }
+
+  function hNessunAccesso() {
+    return '<div class="login"><div class="login-card">' +
+      "<h1>Accesso non abilitato</h1>" +
+      '<p class="login-sub">' + esc(SESS ? SESS.email : "") + "</p>" +
+      "<p class=\"login-note\">Il tuo utente esiste ma non &egrave; abilitato al cantiere " +
+      esc(NOME) + ". Chiedi alla direzione tecnica di abilitarlo.</p>" +
+      '<button data-act="esci">Esci</button></div></div>';
+  }
+
   /* ------------------------------------------------ shell */
   function render(keepScroll) {
     var y = window.scrollY;
+    if (SY.on && !SESS) { app.innerHTML = hLogin(); return; }
+    if (SY.on && SESS && !SESS.ruolo) { app.innerHTML = hNessunAccesso(); return; }
+    document.body.classList.toggle("sola-lettura", !!readOnly);
     var vuoto = !S.days.length || !S.rows.length;
     if (vuoto) {
       app.innerHTML = hTop(true) + '<main class="wrap">' + hVuoto() + "</main>";
@@ -1196,6 +1285,14 @@ window.SUVERA_SYNC = {
   document.addEventListener("click", function (e) {
     var el = e.target.closest("[data-tab],[data-day],[data-act]");
     if (!el) return;
+    if (el.dataset.act === "entra") {
+      var m = document.getElementById("lg-mail"), pw = document.getElementById("lg-pw");
+      if (!m || !pw) return;
+      if (!m.value.trim() || !pw.value) { loginErr = "Inserisci email e password."; render(); return; }
+      entra(m.value.trim(), pw.value);
+      return;
+    }
+    if (el.dataset.act === "esci") { esci(); return; }
     if (el.dataset.tab) { view.tab = el.dataset.tab; render(); window.scrollTo(0, 0); return; }
     if (el.dataset.day) { view.day = +el.dataset.day; render(); return; }
     var a = el.dataset.act;
@@ -1233,7 +1330,7 @@ window.SUVERA_SYNC = {
     else if (a === "chiudi") {
       if (readOnly || !chiudibile(view.day)) return;
       var campoChi = document.getElementById("chi");
-      var nome = (campoChi ? campoChi.value : utente()).trim();
+      var nome = (SESS ? SESS.nome : (campoChi ? campoChi.value : utente())).trim();
       if (!nome) {
         if (campoChi) { campoChi.classList.add("manca"); campoChi.focus(); }
         return;
@@ -1249,6 +1346,14 @@ window.SUVERA_SYNC = {
     }
     else if (a === "wa") { sendReport(); }
     else if (a === "save") { save(); }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.target.id === "lg-mail" || e.target.id === "lg-pw")) {
+      e.preventDefault();
+      var b = document.querySelector('[data-act="entra"]');
+      if (b && !b.disabled) b.click();
+    }
   });
 
   document.addEventListener("change", function (e) {
@@ -1441,15 +1546,96 @@ window.SUVERA_SYNC = {
     }
   }
 
-  function api(path, opts) {
+  function baseUrl() {
+    return String(CFG.url || "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
+  }
+
+  function api(path, opts, giaRiprovato) {
     opts = opts || {};
     opts.headers = Object.assign({
       apikey: CFG.key,
-      Authorization: "Bearer " + CFG.key,
+      Authorization: "Bearer " + ((SESS && SESS.token) || CFG.key),
       "Content-Type": "application/json"
     }, opts.headers || {});
-    var base = String(CFG.url || "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
-    return fetch(base + "/rest/v1/" + path, opts);
+    return fetch(baseUrl() + "/rest/v1/" + path, opts).then(function (r) {
+      if (r.status === 401 && SESS && !giaRiprovato) {
+        return rinnova().then(function (ok) {
+          if (!ok) { esci(); throw new Error(401); }
+          var o2 = { method: opts.method, body: opts.body, headers: opts.headers };
+          delete o2.headers.Authorization;
+          return api(path, o2, true);
+        });
+      }
+      return r;
+    });
+  }
+
+  function auth(grant, body) {
+    return fetch(baseUrl() + "/auth/v1/token?grant_type=" + grant, {
+      method: "POST",
+      headers: { apikey: CFG.key, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); });
+  }
+
+  function rinnova() {
+    if (!SESS || !SESS.refresh) return Promise.resolve(false);
+    return auth("refresh_token", { refresh_token: SESS.refresh }).then(function (r) {
+      if (!r.ok || !r.d.access_token) return false;
+      SESS.token = r.d.access_token;
+      SESS.refresh = r.d.refresh_token || SESS.refresh;
+      salvaSess(SESS);
+      return true;
+    }).catch(function () { return false; });
+  }
+
+  function entra(email, password) {
+    loginBusy = true; loginErr = ""; render();
+    return auth("password", { email: email, password: password }).then(function (r) {
+      if (!r.ok || !r.d.access_token) {
+        loginBusy = false;
+        loginErr = (r.d && /invalid/i.test(r.d.error_description || r.d.msg || ""))
+          ? "Email o password non corretti."
+          : "Accesso non riuscito. Controlla la connessione e riprova.";
+        render();
+        return;
+      }
+      SESS = {
+        token: r.d.access_token, refresh: r.d.refresh_token,
+        email: (r.d.user && r.d.user.email) || email, nome: "", ruolo: ""
+      };
+      salvaSess(SESS);
+      loginBusy = false;
+      return permessi().then(avvia);
+    }).catch(function () {
+      loginBusy = false;
+      loginErr = "Accesso non riuscito. Controlla la connessione e riprova.";
+      render();
+    });
+  }
+
+  function esci() {
+    SESS = null; salvaSess(null); CANTIERI = []; readOnly = false;
+    location.reload();
+  }
+
+  // che ruolo ho su questo cantiere
+  function permessi() {
+    return api("accessi?select=cantiere,ruolo,nome").then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (list) {
+      var mio = null;
+      (list || []).forEach(function (a) {
+        if (a.cantiere === CANTIERE) mio = a;
+        else if (a.cantiere === "*" && !mio) mio = a;
+      });
+      if (!SESS) return;
+      SESS.ruolo = mio ? mio.ruolo : "";
+      SESS.nome = (mio && mio.nome) || SESS.email.split("@")[0];
+      readOnly = SESS.ruolo === "lettore" || !SESS.ruolo;
+      salvaSess(SESS);
+    }).catch(function () { /* permessi non leggibili: la pagina restera' vuota */ });
   }
 
   function hhmm(iso) {
@@ -1760,19 +1946,28 @@ window.SUVERA_SYNC = {
   }
 
   /* ------------------------------------------------ avvio */
-  if (!SY.on) hashRead();
-
-  // si apre sulla giornata di oggi; se oggi e' fuori programma, sul primo giorno da compilare
-  var iOggi = S.days.indexOf(oggi());
-  if (iOggi >= 0) {
-    view.day = iOggi;
-  } else {
-    for (var i = 0; i < S.days.length; i++) {
-      if (tally(rowsOf(i)).idle > 0) { view.day = i; break; }
+  function avvia() {
+    if (!SY.on) hashRead();
+    var iOggi = S.days.indexOf(oggi());
+    if (iOggi >= 0) {
+      view.day = iOggi;
+    } else {
+      for (var i = 0; i < S.days.length; i++) {
+        if (tally(rowsOf(i)).idle > 0) { view.day = i; break; }
+      }
     }
+    render();
+    startSync();
   }
-  render();
-  startSync();
+
+  if (!SY.on) {
+    avvia();
+  } else {
+    SESS = leggiSess();
+    if (!SESS) { render(); }
+    else { render(); permessi().then(avvia); }
+  }
+
 
   // se la pagina gira come artifact Claude, il salvataggio diventa condiviso
   if (window.claude && window.claude.use) {
