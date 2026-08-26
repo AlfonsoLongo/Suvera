@@ -81,6 +81,21 @@ h1,h2,h3{margin:0;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif
 .tab[aria-selected="true"]{opacity:1;border-bottom-color:currentColor}
 .tab:focus-visible{outline:2px solid currentColor;outline-offset:-4px}
 
+/* ---------- pannello del profilo ---------- */
+.umenu{background:var(--surface);border-bottom:1px solid var(--line)}
+.umenu-in{max-width:860px;margin:0 auto;padding:14px}
+.umenu-chi b{display:block;font-size:16px;font-weight:600;color:var(--ink)}
+.umenu-chi span{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.umenu-tag{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.umenu-bt{display:flex;gap:7px;margin-top:12px}
+.umenu-bt button{flex:1;appearance:none;cursor:pointer;
+  font:600 11px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  padding:11px 12px;border-radius:7px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+.umenu-bt button.esci{border-color:var(--ko);color:var(--ko);background:var(--ko-bg)}
+.umenu-bt button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.umenu-note{margin:9px 0 0;font-size:11px;color:var(--ink-3)}
+
 /* ---------- day strip ---------- */
 .daystrip{display:flex;gap:6px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none;
   scroll-snap-type:x proximity}
@@ -536,6 +551,7 @@ window.SUVERA_SYNC = {
   var CANTIERI = [];   // elenco per il menu a tendina, letto dall'archivio
   var SESS = null;     // { token, refresh, email, nome, ruolo }
   var loginErr = "";
+  var menuU = false;   // pannello del profilo aperto
   var loginBusy = false;
   var CHIAVE_SESS = "suvera_sess_" + CANTIERE;
 
@@ -709,15 +725,31 @@ window.SUVERA_SYNC = {
       '<div class="brand">' + testa +
       '<span class="sub">' + esc(LUOGO) + ' &middot; monitoraggio programma</span>' +
       (SY.on ? '<span class="synced s-' + SY.state + '">' + chipText() + "</span>" : "") +
-      (SESS ? '<button class="chi-sono" data-act="esci" title="Esci">' + esc(SESS.nome) +
-        (readOnly ? " &middot; sola lettura" : "") + "</button>" : "") +
+      (SESS ? '<button class="chi-sono" data-act="io" aria-expanded="' + menuU + '">' +
+        esc(SESS.nome) + (readOnly ? " &middot; sola lettura" : "") + "</button>" : "") +
       "</div>" +
       (vuoto ? "" : '<nav class="tabs" role="tablist">' + tabs.map(function (t) {
         return '<button class="tab" role="tab" data-tab="' + t[0] + '" aria-selected="' +
           (view.tab === t[0]) + '">' + t[1] +
           (t[0] === "rec" && nsc ? '<span class="badge">' + nsc + "</span>" : "") +
           (t[0] === "mat" && nmat ? '<span class="badge">' + nmat + "</span>" : "") + "</button>";
-      }).join("") + "</nav>") + "</div></header>";
+      }).join("") + "</nav>") + "</div></header>" +
+      (menuU && SESS ? hMenuUtente() : "");
+  }
+
+  function hMenuUtente() {
+    var RUOLI = {
+      amministratore: "Amministratore", compilatore: "Pu&ograve; compilare", lettore: "Sola lettura"
+    };
+    return '<div class="umenu"><div class="umenu-in">' +
+      '<div class="umenu-chi"><b>' + esc(SESS.nome) + "</b>" +
+      '<span class="mono">' + esc(SESS.email) + "</span></div>" +
+      '<div class="umenu-tag"><span class="tag">' + (RUOLI[SESS.ruolo] || esc(SESS.ruolo)) +
+      '</span><span class="tag">' + esc(NOME) + "</span></div>" +
+      '<div class="umenu-bt"><button data-act="io">Chiudi</button>' +
+      '<button class="esci" data-act="esci">Esci da questo telefono</button></div>' +
+      '<p class="umenu-note">Uscendo dovrai reinserire email e password al prossimo accesso.</p>' +
+      "</div></div>";
   }
 
   function hDays() {
@@ -1283,6 +1315,9 @@ window.SUVERA_SYNC = {
   }
 
   document.addEventListener("click", function (e) {
+    if (menuU && !e.target.closest(".umenu, .chi-sono")) {
+      menuU = false; render(true);
+    }
     var el = e.target.closest("[data-tab],[data-day],[data-act]");
     if (!el) return;
     if (el.dataset.act === "entra") {
@@ -1292,6 +1327,7 @@ window.SUVERA_SYNC = {
       entra(m.value.trim(), pw.value);
       return;
     }
+    if (el.dataset.act === "io") { menuU = !menuU; render(true); return; }
     if (el.dataset.act === "esci") { esci(); return; }
     if (el.dataset.tab) { view.tab = el.dataset.tab; render(); window.scrollTo(0, 0); return; }
     if (el.dataset.day) { view.day = +el.dataset.day; render(); return; }
