@@ -430,13 +430,56 @@ body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
 .rdabtn{color:var(--accent-ink)}
 .rdabtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
+.avanzo{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--part-bg);
+  border:1px solid var(--part);color:var(--part);font-size:12.5px;line-height:1.4}
+.avanzo b{display:block;color:var(--part)}
+.avanzo-bt{display:flex;gap:6px;margin-top:9px}
+.avanzo-bt button{flex:1;appearance:none;cursor:pointer;
+  font:600 10.5px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;
+  padding:9px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2)}
+.avanzo-bt button.si{border-color:var(--part);background:var(--part);color:#fff}
+:root[data-theme="dark"] .avanzo-bt button.si,
+:root:not([data-theme="light"]) .avanzo-bt button.si{color:var(--accent-ink)}
+.avviso-link{margin-top:7px}
+.avviso-link button{appearance:none;cursor:pointer;font:600 10px/1 "Barlow Condensed",Arial,sans-serif;
+  letter-spacing:.09em;text-transform:uppercase;padding:7px 10px;border-radius:6px;
+  border:1px solid var(--ok);background:var(--ok);color:#fff}
+:root[data-theme="dark"] .avviso-link button,
+:root:not([data-theme="light"]) .avviso-link button{color:var(--accent-ink)}
+
+/* ---------- bacheca avanzi ---------- */
+.res{margin-top:8px;overflow:hidden;display:flex;gap:0;flex-direction:column}
+.res.pren{border-left:3px solid var(--part)}
+.resfoto{width:100%;height:150px;object-fit:cover;display:block;background:var(--surface-2)}
+.rescorpo{padding:11px 12px 10px}
+.res .name{font-size:14.5px}
+.resbt{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.resbt button{flex:1 1 auto;appearance:none;cursor:pointer;
+  font:600 10.5px/1 "Barlow Condensed",Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;
+  padding:9px 11px;border-radius:7px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+.resbt button.pren{border-color:var(--ok);background:var(--ok);color:#fff}
+:root[data-theme="dark"] .resbt button.pren,
+:root:not([data-theme="light"]) .resbt button.pren{color:var(--accent-ink)}
+.resbt button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.resform{margin-top:10px;padding:14px 13px 13px}
+.resform h3{font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-2);
+  margin-bottom:10px}
+.resform textarea.manca,.resform .manca{border-color:var(--ko);background:var(--ko-bg)}
+.resform input[type="file"]{width:100%;font:inherit;font-size:13px;color:var(--ink-2);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:9px}
+.avviso-mag{margin-top:9px;padding:9px 11px;border-radius:8px;background:var(--ok-bg);
+  border:1px solid var(--ok);color:var(--ok);font-size:12.5px;line-height:1.4}
+.avviso-mag b{display:block}
+
 /* ---------- report stampabile ---------- */
-#report,#rda{display:none}
+#report,#rda,#buono{display:none}
 @media print{
   body{background:#fff;color:#111;font-size:10pt}
   .top,.wrap,.savebar,.toast,.alert{display:none !important}
   #report{display:block;max-width:none;padding:0}
-  body.print-rda #report{display:none !important}
+  body.print-rda #report,body.print-buono #report{display:none !important}
+  body.print-buono #buono{display:block}
   #report .rhead{display:flex;align-items:flex-start;justify-content:space-between;
     border-bottom:2px solid #14403C;padding-bottom:8px;margin-bottom:14px}
   #report h1{font-family:"Barlow Condensed",Arial,sans-serif;font-size:19pt;text-transform:uppercase;
@@ -466,46 +509,56 @@ body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
 @media print{
   body.print-rda{font-size:9.5pt}
   body.print-rda #rda{display:block}
-  #rda .rdahead{border-bottom:2px solid #14403C;padding-bottom:7px;margin-bottom:10px}
-  #rda h1{font-family:"Barlow Condensed",Arial,sans-serif;font-size:20pt;text-transform:uppercase;
+  #rda .rdahead,  #buono .rdahead{border-bottom:2px solid #14403C;padding-bottom:7px;margin-bottom:10px}
+  #rda h1,  #buono h1{font-family:"Barlow Condensed",Arial,sans-serif;font-size:20pt;text-transform:uppercase;
     letter-spacing:.03em;color:#14403C;margin:0}
-  #rda .rdahead p{margin:2px 0 0;font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:#555}
-  #rda .rdatop{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-bottom:9px}
-  #rda .rf{display:flex;gap:6px;align-items:baseline;border-bottom:1px dotted #BBB;padding:3px 0}
-  #rda .rf span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#666;
+  #rda .rdahead p,  #buono .rdahead p{margin:2px 0 0;font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:#555}
+  #rda .rdatop,  #buono .rdatop{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-bottom:9px}
+  #rda .rf,  #buono .rf{display:flex;gap:6px;align-items:baseline;border-bottom:1px dotted #BBB;padding:3px 0}
+  #rda .rf span,  #buono .rf span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#666;
     min-width:34mm}
-  #rda .rf b{font-size:10pt;font-weight:600}
-  #rda .rdaind{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:9px}
-  #rda .rdaentro{display:flex;align-items:baseline;gap:8px;margin-bottom:11px;
+  #rda .rf b,  #buono .rf b{font-size:10pt;font-weight:600}
+  #rda .rdaind,  #buono .rdaind{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:9px}
+  #rda .rdaentro,  #buono .rdaentro{display:flex;align-items:baseline;gap:8px;margin-bottom:11px;
     border:1px solid #B9C0BA;background:#EDEFEA;padding:4px 8px}
-  #rda .rdaentro span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#555}
-  #rda .rdaentro b{font-size:11pt}
-  #rda .rdaind h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:9.5pt;
+  #rda .rdaentro span,  #buono .rdaentro span{font-size:7.5pt;text-transform:uppercase;letter-spacing:.08em;color:#555}
+  #rda .rdaentro b,  #buono .rdaentro b{font-size:11pt}
+  #rda .rdaind h2,  #buono .rdaind h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:9.5pt;
     text-transform:uppercase;letter-spacing:.08em;color:#14403C;margin:0 0 3px;
     border-bottom:1px solid #DDD;padding-bottom:2px}
-  #rda .rdaind p{margin:0;font-size:9.5pt;line-height:1.35}
-  #rda table.rdatab{width:100%;border-collapse:collapse;font-size:9pt}
-  #rda .rdatab th{background:#EDEFEA;border:1px solid #B9C0BA;padding:4px 4px;text-align:left;
+  #rda .rdaind p,  #buono .rdaind p{margin:0;font-size:9.5pt;line-height:1.35}
+  #rda table.rdatab,  #buono table.rdatab{width:100%;border-collapse:collapse;font-size:9pt}
+  #rda .rdatab th,  #buono .rdatab th{background:#EDEFEA;border:1px solid #B9C0BA;padding:4px 4px;text-align:left;
     font-family:"Barlow Condensed",Arial,sans-serif;font-size:7.4pt;text-transform:uppercase;
     letter-spacing:.02em;line-height:1.15}
-  #rda .rdatab td{border:1px solid #CFD5D0;padding:3px 5px;height:5.6mm;vertical-align:top}
-  #rda .rdatab td:nth-child(1),#rda .rdatab th:nth-child(1){width:12mm}
-  #rda .rdatab td:nth-child(3),#rda .rdatab th:nth-child(3){width:13mm}
-  #rda .rdatab td:nth-child(4),#rda .rdatab th:nth-child(4){width:18mm;text-align:right}
-  #rda .rdatab td:nth-child(5),#rda .rdatab th:nth-child(5){width:17mm;text-align:right}
-  #rda .rdatab td:nth-child(6),#rda .rdatab th:nth-child(6){width:15mm;text-align:right}
-  #rda .rdatab td:nth-child(7),#rda .rdatab th:nth-child(7){width:19mm;text-align:right}
-  #rda .rdatab{table-layout:fixed}
-  #rda .rdatab td:nth-child(2){word-break:break-word}
-  #rda .rdafirme{display:flex;gap:16mm;margin-top:8mm;font-size:9pt;color:#444;
+  #rda .rdatab td,  #buono .rdatab td{border:1px solid #CFD5D0;padding:3px 5px;height:5.6mm;vertical-align:top}
+  #rda .rdatab td:nth-child(1),#rda .rdatab th:nth-child(1),  #buono .rdatab td:nth-child(1),#buono .rdatab th:nth-child(1){width:12mm}
+  #rda .rdatab td:nth-child(3),#rda .rdatab th:nth-child(3),  #buono .rdatab td:nth-child(3),#buono .rdatab th:nth-child(3){width:13mm}
+  #rda .rdatab td:nth-child(4),#rda .rdatab th:nth-child(4),  #buono .rdatab td:nth-child(4),#buono .rdatab th:nth-child(4){width:18mm;text-align:right}
+  #rda .rdatab td:nth-child(5),#rda .rdatab th:nth-child(5),  #buono .rdatab td:nth-child(5),#buono .rdatab th:nth-child(5){width:17mm;text-align:right}
+  #rda .rdatab td:nth-child(6),#rda .rdatab th:nth-child(6),  #buono .rdatab td:nth-child(6),#buono .rdatab th:nth-child(6){width:15mm;text-align:right}
+  #rda .rdatab td:nth-child(7),#rda .rdatab th:nth-child(7),  #buono .rdatab td:nth-child(7),#buono .rdatab th:nth-child(7){width:19mm;text-align:right}
+  #rda .rdatab,  #buono .rdatab{table-layout:fixed}
+  #rda .rdatab td:nth-child(2),  #buono .rdatab td:nth-child(2){word-break:break-word}
+  #rda .rdafirme,  #buono .rdafirme{display:flex;gap:16mm;margin-top:8mm;font-size:9pt;color:#444;
     page-break-inside:avoid}
-  #rda .rdafirme div{flex:1;border-top:1px solid #999;padding-top:3px}
-  #rda .rdaris{margin-top:6mm;border:1px solid #CFD5D0;padding:5px 8px;page-break-inside:avoid}
-  #rda .rdaris h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:9pt;
+  #rda .rdafirme div,  #buono .rdafirme div{flex:1;border-top:1px solid #999;padding-top:3px}
+  #rda .rdaris,  #buono .rdaris{margin-top:6mm;border:1px solid #CFD5D0;padding:5px 8px;page-break-inside:avoid}
+  #rda .rdaris h2,  #buono .rdaris h2{font-family:"Barlow Condensed",Arial,sans-serif;font-size:9pt;
     text-transform:uppercase;letter-spacing:.09em;color:#555;margin:0 0 5px}
-  #rda .rdaris div{display:flex;gap:14mm;font-size:8.5pt;color:#777}
-  #rda .rdaris div span{flex:1;border-bottom:1px solid #CCC;padding-bottom:6mm}
-  #rda .rdaris p{margin:4mm 0 0;font-size:8.5pt;color:#777}
+  #rda .rdaris div,  #buono .rdaris div{display:flex;gap:14mm;font-size:8.5pt;color:#777}
+  #rda .rdaris div span,  #buono .rdaris div span{flex:1;border-bottom:1px solid #CCC;padding-bottom:6mm}
+  #rda .rdaris p,  #buono .rdaris p{margin:4mm 0 0;font-size:8.5pt;color:#777}
+  body.print-buono{font-size:10pt}
+  #buono .rdatop{grid-template-columns:1fr 1fr;margin-bottom:12px}
+  #buono .rdatab th:nth-child(1),#buono .rdatab td:nth-child(1){width:auto}
+  #buono .rdatab th:nth-child(2),#buono .rdatab td:nth-child(2){width:22mm;text-align:left}
+  #buono .rdatab th:nth-child(3),#buono .rdatab td:nth-child(3){width:26mm;text-align:right}
+  #buono .rdatab td{height:7mm}
+  #buono .bnote{color:#555;font-size:8.5pt;padding-top:1mm}
+  #buono .rdafirme{margin-top:14mm;gap:24mm}
+  #buono .rfoot{margin-top:8mm;font-size:7.5pt;color:#777;
+    border-top:1px solid #DDD;padding-top:4px}
 }
 </style>
 <div id="app"></div>
@@ -518,7 +571,7 @@ body.sola-lettura .rdabtn{pointer-events:none;opacity:.5}
 window.SUVERA_SYNC = {
   cantiere: "suvera",
   nome:     "La Suvera",
-  luogo:    "Pievescola",
+  luogo:    "Pievescola (SI)",
   url:      "https://yavlfpvnchkjobtywqkh.supabase.co",
   key:      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhdmxmcHZuY2hram9idHl3cWtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzU5MjIsImV4cCI6MjEwMzIxMTkyMn0.c59JIgkMoT2Fm7cH5dFRLyDT6-r6voNE9cSHnAZczHg",
   rda: {
@@ -559,6 +612,11 @@ window.SUVERA_SYNC = {
   var SESS = null;     // { token, refresh, email, nome, ruolo }
   var loginErr = "";
   var menuU = false;   // pannello del profilo aperto
+  var RES = null;      // avanzi caricati dalla bacheca
+  var NOMIC = {};      // slug -> nome del cantiere, imparati dalla bacheca
+  var resBusy = false;
+  var resNuovo = null; // { riga } mentre si dichiara un avanzo
+  var buono = null;    // avanzo di cui stampare il buono di trasferimento
   var loginBusy = false;
   var CHIAVE_SESS = "suvera_sess_" + CANTIERE;
 
@@ -653,8 +711,20 @@ window.SUVERA_SYNC = {
     SY.tMat[k] = 1;
     var m = S.mat[k] || {};
     for (var p in patch) { if (patch[p] === "") delete m[p]; else m[p] = patch[p]; }
-    if (!m.st) delete S.mat[k]; else S.mat[k] = m;
+    if (!m.st && !m.av) delete S.mat[k]; else S.mat[k] = m;
   }
+  var ULTIMO = null;
+  function ultimoGiorno(k) {
+    if (!ULTIMO) {
+      ULTIMO = {};
+      S.rows.forEach(function (r) {
+        var kk = lavKey(r);
+        if (ULTIMO[kk] === undefined || r[R.D] > ULTIMO[kk]) ULTIMO[kk] = r[R.D];
+      });
+    }
+    return ULTIMO[k];
+  }
+
   function daOrdinare() {
     var out = [];
     Object.keys(S.mat).forEach(function (k) {
@@ -716,8 +786,8 @@ window.SUVERA_SYNC = {
   function hTop(vuoto) {
     var nsc = scaduti().length;
     var nmat = daOrdinare().length;
-    var tabs = [["day", "Giornata"], ["rec", "Recuperi"], ["mat", "Materiali"], ["firm", "Ditte"],
-      ["iss", "Criticità"], ["trend", "Andamento"]];
+    var tabs = [["day", "Giornata"], ["rec", "Recuperi"], ["mat", "Materiali"],
+      ["mag", "Magazzino"], ["firm", "Ditte"], ["iss", "Criticità"], ["trend", "Andamento"]];
     var testa;
     if (CANTIERI.length > 1) {
       testa = '<div class="pickwrap"><select class="pick" data-act="cantiere" ' +
@@ -894,8 +964,19 @@ window.SUVERA_SYNC = {
       return '<button class="m-' + v + '" data-act="mat" data-id="' + r[R.ID] + '" data-v="' + v +
         '" aria-pressed="' + (st === v) + '">' + lab + "</button>";
     };
-    if (readOnly && !st) return "";
-    var h = '<div class="matbox"><span class="matlab">Materiale</span><div class="matseg">' +
+    var fine = (r[R.ST] === "ok" || r[R.ST] === "part") &&
+      ultimoGiorno(lavKey(r)) === r[R.D] && !m.av && !readOnly && !chiusa(r[R.D]);
+    if (readOnly && !st) return fine ? "" : "";
+    var h = "";
+    if (fine) {
+      h += '<div class="avanzo"><b>Lavorazione conclusa oggi.</b> &Egrave; avanzato materiale ' +
+        "riutilizzabile?" +
+        '<div class="avanzo-bt">' +
+        '<button data-act="av-no" data-id="' + r[R.ID] + '">No, niente</button>' +
+        '<button class="si" data-act="av-si" data-id="' + r[R.ID] + '">S&igrave;, dichiara</button>' +
+        "</div></div>";
+    }
+    h += '<div class="matbox"><span class="matlab">Materiale</span><div class="matseg">' +
       b("ok", "In cantiere") + b("arr", "In arrivo") + b("no", "Da ordinare") + b("na", "Non serve") +
       "</div>";
     if (st === "no") {
@@ -918,6 +999,7 @@ window.SUVERA_SYNC = {
         '<div><label for="mu-' + r[R.ID] + '">Unit&agrave; di misura</label>' +
         '<input id="mu-' + r[R.ID] + '" data-act="m-um" data-id="' + r[R.ID] +
         '" value="' + esc(m.um || "") + '" placeholder="bancali, mq, kg"></div></div>' +
+        hAvvisoMagazzino(m.desc || S.att[r[R.A]]) +
         '<button class="rdabtn" data-act="rda-one" data-id="' + r[R.ID] +
         '">Genera RDA per questo materiale</button></div>';
     } else if (st === "arr" || st === "ok") {
@@ -980,6 +1062,152 @@ window.SUVERA_SYNC = {
       (m.entro ? '<span class="tag">entro ' + dmy(m.entro) + "</span>" : "") +
       (m.rda ? '<span class="tag ok">RDA ' + esc(m.rda) + "</span>" : "") + "</div>" +
       '<p class="promessa">' + esc(S.att[r[R.A]]) + "</p></article>";
+  }
+
+  function parole(t) {
+    return String(t || "").toLowerCase().replace(/[^a-zà-ù0-9 ]/g, " ")
+      .split(/\s+/).filter(function (w) { return w.length > 3; });
+  }
+  function simili(testo) {
+    if (!RES || !testo) return [];
+    var p = parole(testo);
+    if (!p.length) return [];
+    return RES.filter(function (x) {
+      if (x.cantiere === CANTIERE || x.stato !== "disponibile") return false;
+      var q = parole(x.descrizione);
+      for (var i = 0; i < p.length; i++) if (q.indexOf(p[i]) >= 0) return true;
+      return false;
+    });
+  }
+  function hAvvisoMagazzino(testo) {
+    var s = simili(testo);
+    if (!s.length) return "";
+    return '<div class="avviso-mag"><b>C&rsquo;&egrave; gi&agrave; in azienda</b>' +
+      s.slice(0, 3).map(function (x) {
+        return "<div>" + esc(x.descrizione) + " &mdash; " +
+          esc([x.qta, x.um].filter(Boolean).join(" ")) + " a " + esc(nomeCantiere(x.cantiere)) +
+          (x.entro ? ", entro il " + dmy(x.entro) : "") + "</div>";
+      }).join("") +
+      '<div class="avviso-link"><button data-act="vai-mag">Vedi in Magazzino</button></div></div>';
+  }
+
+  /* ------------------------------------------------ magazzino */
+  function hResCard(x, mio) {
+    var gg2 = x.entro ? giorniDa(x.entro) : null;
+    var scad = gg2 !== null && gg2 <= 7;
+    var q = [x.qta, x.um].filter(function (v) { return v || v === 0; }).join(" ");
+    var h = '<article class="card res ' + (x.stato === "prenotato" ? "pren" : "") + '">' +
+      (x.foto ? '<img class="resfoto" src="' + esc(urlFoto(x.foto)) + '" alt="" loading="lazy">' : "") +
+      '<div class="rescorpo"><div class="who"><span class="name">' + esc(x.descrizione) + "</span></div>" +
+      '<div class="zoneline">' +
+      (q ? '<span class="tag ok">' + esc(q) + "</span>" : "") +
+      '<span class="zone">' + esc(nomeCantiere(x.cantiere)) + "</span>" +
+      (x.wbs ? '<span class="tag">WBS ' + esc(x.wbs) + "</span>" : "") +
+      (x.entro ? '<span class="tag' + (scad ? " ko" : "") + '">entro ' + dmy(x.entro) + "</span>" : "") +
+      "</div>" +
+      (x.note ? '<p class="promessa">' + esc(x.note) + "</p>" : "") +
+      (x.stato === "prenotato"
+        ? '<p class="matnote">Prenotato da ' + esc(x.pren_nome || "—") +
+          (x.pren_cantiere ? " (" + esc(nomeCantiere(x.pren_cantiere)) + ")" : "") + ".</p>"
+        : "") +
+      '<div class="resbt">';
+    if (x.stato === "disponibile" && !mio) {
+      h += '<button class="pren" data-act="res-pren" data-id="' + x.id + '">Prenota</button>';
+    }
+    if (x.stato === "prenotato" && mio) {
+      h += '<button class="pren" data-act="res-ritirato" data-id="' + x.id +
+        '">Consegnato / ritirato</button>' +
+        '<button data-act="res-buono" data-id="' + x.id + '">Buono di trasferimento</button>';
+    }
+    if (x.stato === "prenotato" && !mio) {
+      h += '<button data-act="res-annulla" data-id="' + x.id + '">Annulla prenotazione</button>' +
+        '<button data-act="res-buono" data-id="' + x.id + '">Buono di trasferimento</button>';
+    }
+    if (mio && x.stato === "disponibile") {
+      h += '<button data-act="res-elimina" data-id="' + x.id + '">Non c&rsquo;&egrave; pi&ugrave;</button>';
+    }
+    return h + "</div></div></article>";
+  }
+
+  function nomeCantiere(slug) {
+    if (!slug) return "";
+    if (slug === CANTIERE) return NOME;
+    for (var i = 0; i < CANTIERI.length; i++) {
+      if (CANTIERI[i].slug === slug) return CANTIERI[i].nome;
+    }
+    return NOMIC[slug] || slug;
+  }
+
+  function hMagazzino() {
+    if (RES === null) {
+      caricaResidui();
+      return '<h2 class="sectionhead">Magazzino</h2>' +
+        '<div class="card empty">Carico la bacheca&hellip;</div>';
+    }
+    var miei = RES.filter(function (x) { return x.cantiere === CANTIERE; });
+    var altri = RES.filter(function (x) { return x.cantiere !== CANTIERE; });
+    var disp = altri.filter(function (x) { return x.stato === "disponibile"; });
+
+    var h = '<h2 class="sectionhead">Magazzino degli avanzi</h2>' +
+      '<div class="tiles"><div class="tile ok"><b>' + miei.length + "</b><span>Da noi</span></div>" +
+      '<div class="tile part"><b>' + disp.length + "</b><span>Su altri cantieri</span></div>" +
+      '<div class="tile idle"><b>' +
+      RES.filter(function (x) { return x.stato === "prenotato"; }).length +
+      "</b><span>Prenotati</span></div>" +
+      '<div class="tile ko"><b>' +
+      RES.filter(function (x) { return x.entro && giorniDa(x.entro) <= 7; }).length +
+      "</b><span>In scadenza</span></div></div>";
+
+    if (!readOnly) {
+      h += '<div class="toolbar"><button class="chiudi" data-act="res-nuovo">' +
+        "Dichiara un avanzo</button></div>";
+    }
+    if (resNuovo) h += hResForm();
+
+    h += '<h3 class="rechead">Avanzi di questo cantiere</h3>';
+    if (!miei.length) {
+      h += '<div class="card empty">Nessun avanzo dichiarato qui.</div>';
+    } else {
+      miei.forEach(function (x) { h += hResCard(x, true); });
+    }
+
+    h += '<h3 class="rechead ok">Disponibili sugli altri cantieri</h3>';
+    if (!altri.length) {
+      h += '<div class="card empty">Al momento gli altri cantieri non hanno avanzi in bacheca.</div>';
+    } else {
+      altri.forEach(function (x) { h += hResCard(x, false); });
+    }
+    return h;
+  }
+
+  function hResForm() {
+    var d = resNuovo || {};
+    return '<div class="card resform"><h3>Nuovo avanzo</h3>' +
+      '<div class="detail">' +
+      '<div><label for="rs-desc">Che cosa &egrave; avanzato</label>' +
+      '<textarea id="rs-desc" placeholder="marca, tipo, misura">' + esc(d.descrizione || "") + "</textarea></div>" +
+      '<div class="due"><div><label for="rs-qta">Quantit&agrave;</label>' +
+      '<input id="rs-qta" inputmode="decimal" value="' + esc(d.qta || "") + '"></div>' +
+      '<div><label for="rs-um">Unit&agrave;</label>' +
+      '<input id="rs-um" value="' + esc(d.um || "") + '" placeholder="sacchi, mq, kg"></div></div>' +
+      '<div class="due"><div><label for="rs-wbs">WBS</label>' +
+      '<select id="rs-wbs"><option value="">— nessuna —</option>' +
+      WBS.map(function (w) {
+        return '<option value="' + w[0] + '"' + (d.wbs === w[0] ? " selected" : "") + ">" +
+          w[0] + " — " + esc(w[1]) + "</option>";
+      }).join("") + "</select></div>" +
+      '<div><label for="rs-entro">Utilizzabile entro</label>' +
+      '<input type="date" id="rs-entro" value="' + esc(d.entro || "") + '"></div></div>' +
+      '<div><label for="rs-note">Dove si trova, in che stato</label>' +
+      '<textarea id="rs-note" placeholder="es. sotto la tettoia, bancale aperto">' +
+      esc(d.note || "") + "</textarea></div>" +
+      '<div><label for="rs-foto">Foto</label>' +
+      '<input type="file" id="rs-foto" accept="image/*" capture="environment"></div>' +
+      "</div>" +
+      '<div class="umenu-bt"><button data-act="res-annulla-form">Annulla</button>' +
+      '<button class="esci" style="border-color:var(--ok);color:var(--ok);background:var(--ok-bg)" ' +
+      'data-act="res-salva">' + (d.busy ? "Salvataggio&hellip;" : "Metti in bacheca") + "</button></div>" +
+      "</div>";
   }
 
   /* ------------------------------------------------ recuperi */
@@ -1172,6 +1400,77 @@ window.SUVERA_SYNC = {
         : "") + "</div>";
   }
 
+  function salvaResiduo() {
+    if (!resNuovo || resNuovo.busy) return;
+    var g = function (id) { var e = document.getElementById(id); return e ? e.value.trim() : ""; };
+    var desc = g("rs-desc");
+    if (!desc) {
+      var e0 = document.getElementById("rs-desc");
+      if (e0) { e0.classList.add("manca"); e0.focus(); }
+      return;
+    }
+    var dati = {
+      cantiere: CANTIERE,
+      cant_nome: NOME,
+      descrizione: desc,
+      qta: g("rs-qta") ? Number(String(g("rs-qta")).replace(",", ".")) : null,
+      um: g("rs-um") || null,
+      wbs: g("rs-wbs") || null,
+      entro: g("rs-entro") || null,
+      note: g("rs-note") || null,
+      creato_nome: SESS ? SESS.nome : null,
+      stato: "disponibile"
+    };
+    var inp = document.getElementById("rs-foto");
+    var file = inp && inp.files && inp.files[0];
+    resNuovo.busy = true; render(true);
+    var passo = file ? caricaFoto(file).then(function (p) { dati.foto = p; })
+      .catch(function () { /* la foto non e' passata: si salva lo stesso */ })
+      : Promise.resolve();
+    passo.then(function () {
+      return scriviResiduo(null, dati, function () { resNuovo = null; });
+    }).then(function () { resNuovo = null; render(true); })
+      .catch(function () { if (resNuovo) resNuovo.busy = false; render(true); });
+  }
+
+  /* --- buono di trasferimento --- */
+  function hBuono() {
+    if (!buono) return "";
+    var x = buono;
+    var campo = function (l, v) {
+      return '<div class="rf"><span>' + l + "</span><b>" + esc(v || "") + "</b></div>";
+    };
+    return '<div id="buono"><div class="rdahead"><h1>Buono di trasferimento materiale</h1>' +
+      "<p>Movimento di materiale tra cantieri</p></div>" +
+      '<div class="rdatop">' +
+      "<div>" + campo("Data", oggi().split("-").reverse().join("/")) +
+      campo("Cantiere che cede", nomeCantiere(x.cantiere)) +
+      campo("Dichiarato da", x.creato_nome || "") + "</div>" +
+      "<div>" + campo("Cantiere che riceve", nomeCantiere(x.pren_cantiere || "")) +
+      campo("Richiesto da", x.pren_nome || "") +
+      campo("WBS", x.wbs || "") + "</div></div>" +
+      '<table class="rdatab"><thead><tr><th>Descrizione materiale</th><th>um</th>' +
+      "<th>Quantit&agrave;</th></tr></thead><tbody><tr><td>" + esc(x.descrizione) +
+      "</td><td>" + esc(x.um || "") + "</td><td>" + esc(x.qta == null ? "" : x.qta) +
+      "</td></tr>" + (x.note ? "<tr><td colspan='3' class='bnote'>" + esc(x.note) +
+        "</td></tr>" : "") + "</tbody></table>" +
+      '<div class="rdafirme"><div>Chi consegna</div><div>Chi ritira</div></div>' +
+      '<p class="rfoot">Il materiale sopra indicato viene trasferito tra cantieri della stessa ' +
+      "impresa. Documento a uso interno per la tracciabilit&agrave; del movimento.</p></div>";
+  }
+
+  function stampaBuono() {
+    if (stampaInCorso) return;
+    stampaInCorso = true;
+    orienta("portrait");
+    document.body.classList.add("print-buono");
+    render(true);
+    setTimeout(function () {
+      try { window.print(); } catch (e) { /* niente */ }
+      stampaInCorso = false;
+    }, 80);
+  }
+
   /* --- modulo RDA --- */
   var rdaSel = null;      // null = tutti i materiali da ordinare, altrimenti una chiave
 
@@ -1237,6 +1536,7 @@ window.SUVERA_SYNC = {
     stampaInCorso = true;
     rdaSel = chiave || null;
     orienta("portrait");
+    document.body.classList.remove("print-buono");
     document.body.classList.add("print-rda");
     render(true);
     setTimeout(function () {
@@ -1245,18 +1545,21 @@ window.SUVERA_SYNC = {
     }, 80);
   }
   function fineStampa() {
-    if (!document.body.classList.contains("print-rda")) return;
-    document.body.classList.remove("print-rda");
-    rdaSel = null;
+    var b = document.body.classList;
+    if (!b.contains("print-rda") && !b.contains("print-buono")) return;
+    b.remove("print-rda"); b.remove("print-buono");
+    rdaSel = null; buono = null;
     render(true);
   }
   function stampaReport() {
     if (stampaInCorso) return;
     stampaInCorso = true;
     orienta("landscape");
-    if (document.body.classList.contains("print-rda")) {
+    if (document.body.classList.contains("print-rda") ||
+        document.body.classList.contains("print-buono")) {
       document.body.classList.remove("print-rda");
-      rdaSel = null;
+      document.body.classList.remove("print-buono");
+      rdaSel = null; buono = null;
       render(true);
     }
     setTimeout(function () {
@@ -1305,7 +1608,7 @@ window.SUVERA_SYNC = {
       return;
     }
     var body = view.tab === "day" ? hDay() : view.tab === "rec" ? hRec() :
-      view.tab === "mat" ? hMatTab() :
+      view.tab === "mat" ? hMatTab() : view.tab === "mag" ? hMagazzino() :
       view.tab === "firm" ? hFirm() : view.tab === "iss" ? hIss() : hTrend();
     app.innerHTML = hTop() + '<main class="wrap">' +
       (readOnly
@@ -1321,7 +1624,7 @@ window.SUVERA_SYNC = {
           : "Generato dal programma bisettimanale del capocantiere. Quello che compili resta su " +
             "questo telefono. A fine giornata premi <b>Invia riepilogo</b>.") +
       "</p></main>" + (view.tab === "day" ? hReport() : "") +
-      (Object.keys(S.mat).length ? hRda() : "") + hSaveBar() +
+      (Object.keys(S.mat).length ? hRda() : "") + hBuono() + hSaveBar() +
       (saved ? '<div class="toast">' + (shared
         ? "Salvato &mdash; avanzamento aggiornato per tutti"
         : "Riepilogo pronto per l&rsquo;invio") + "</div>" : "");
@@ -1382,6 +1685,46 @@ window.SUVERA_SYNC = {
       stampaRda(lavKey(rr2));
     }
     else if (a === "rda-all") { stampaRda(null); }
+    else if (a === "vai-mag") { view.tab = "mag"; render(); window.scrollTo(0, 0); }
+    else if (a === "av-no") {
+      var rn = byId(el.dataset.id); if (!rn) return;
+      matSet(rn, { av: "no" }); dirty++; touch(rn); render(true);
+    }
+    else if (a === "av-si") {
+      var rs2 = byId(el.dataset.id); if (!rs2) return;
+      matSet(rs2, { av: "si" }); dirty++; touch(rs2);
+      var m2 = mat(rs2) || {};
+      resNuovo = { descrizione: m2.desc || "", um: m2.um || "", wbs: m2.fase || "" };
+      view.tab = "mag"; render(); window.scrollTo(0, 0);
+    }
+    else if (a === "res-nuovo") { resNuovo = {}; render(true); }
+    else if (a === "res-annulla-form") { resNuovo = null; render(true); }
+    else if (a === "res-salva") { salvaResiduo(); }
+    else if (a === "res-pren") {
+      var idp = +el.dataset.id;
+      scriviResiduo(idp, {
+        stato: "prenotato", pren_nome: SESS ? SESS.nome : "",
+        pren_cantiere: CANTIERE, pren_cant_nome: NOME,
+        pren_il: new Date().toISOString()
+      });
+    }
+    else if (a === "res-annulla") {
+      scriviResiduo(+el.dataset.id, {
+        stato: "disponibile", pren_nome: null, pren_cantiere: null,
+        pren_cant_nome: null, pren_il: null
+      });
+    }
+    else if (a === "res-ritirato") {
+      scriviResiduo(+el.dataset.id, { stato: "ritirato", chiuso_il: new Date().toISOString() });
+    }
+    else if (a === "res-elimina") {
+      scriviResiduo(+el.dataset.id, { stato: "eliminato", chiuso_il: new Date().toISOString() });
+    }
+    else if (a === "res-buono") {
+      var idb = +el.dataset.id;
+      buono = (RES || []).filter(function (x) { return x.id === idb; })[0] || null;
+      if (buono) stampaBuono();
+    }
     else if (a === "chiudi") {
       if (readOnly || !chiudibile(view.day)) return;
       var campoChi = document.getElementById("chi");
@@ -1433,6 +1776,7 @@ window.SUVERA_SYNC = {
       var campo = { "m-fase": "fase", "m-desc": "desc", "m-qta": "qta",
         "m-um": "um", "m-entro": "entro" }[a];
       if (campo) { var p = {}; p[campo] = el.value; matSet(r, p); dirty++; touch(r); }
+      if (a === "m-desc") render(true);   // ricontrolla la bacheca degli avanzi
       return;
     }
     touch(r);
@@ -1802,6 +2146,79 @@ window.SUVERA_SYNC = {
     window.addEventListener("online", function () { syncPull(); });
   }
 
+  /* --- bacheca degli avanzi --- */
+  function caricaResidui(poi) {
+    if (!SY.on || resBusy) return;
+    resBusy = true;
+    api("residui?stato=in.(disponibile,prenotato)&select=*&order=creato_il.desc")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (list) {
+        resBusy = false;
+        RES = (list || []).filter(function (x) {
+          return !x.entro || giorniDa(x.entro) >= 0;      // gli scaduti spariscono
+        });
+        RES.forEach(function (x) {                        // i nomi viaggiano con la riga
+          if (x.cant_nome) NOMIC[x.cantiere] = x.cant_nome;
+          if (x.pren_cantiere && x.pren_cant_nome) NOMIC[x.pren_cantiere] = x.pren_cant_nome;
+        });
+        if (poi) poi();
+        render(true);
+      })
+      .catch(function () { resBusy = false; RES = RES || []; render(true); });
+  }
+
+  function scriviResiduo(id, patch, poi) {
+    var opts = {
+      method: id ? "PATCH" : "POST",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify(patch)
+    };
+    return api("residui" + (id ? "?id=eq." + id : ""), opts)
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function () { caricaResidui(poi); })
+      .catch(function () { warn("Non sono riuscito ad aggiornare la bacheca. Riprova."); });
+  }
+
+  function urlFoto(percorso) {
+    return baseUrl() + "/storage/v1/object/public/residui/" + percorso;
+  }
+
+  function comprimi(file) {
+    return new Promise(function (ok, no) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var lato = 1280, w = img.width, h = img.height;
+        if (w > h && w > lato) { h = Math.round(h * lato / w); w = lato; }
+        else if (h >= w && h > lato) { w = Math.round(w * lato / h); h = lato; }
+        var cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        cv.toBlob(function (b) { b ? ok(b) : no(); }, "image/jpeg", 0.72);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); no(); };
+      img.src = url;
+    });
+  }
+
+  function caricaFoto(file) {
+    return comprimi(file).then(function (blob) {
+      var nome = CANTIERE + "/" + Date.now() + ".jpg";
+      return fetch(baseUrl() + "/storage/v1/object/residui/" + nome, {
+        method: "POST",
+        headers: {
+          apikey: CFG.key,
+          Authorization: "Bearer " + ((SESS && SESS.token) || CFG.key),
+          "Content-Type": "image/jpeg"
+        },
+        body: blob
+      }).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return nome;
+      });
+    });
+  }
+
   /* --- riepilogo di fine giornata --- */
   function gruppi(rs) {
     // accorpa le righe che raccontano lo stesso fatto (stessa ditta, attivita', causa, problema)
@@ -2014,6 +2431,7 @@ window.SUVERA_SYNC = {
     }
     render();
     startSync();
+    if (SY.on) caricaResidui();   // la bacheca serve anche al controllo sulle RDA
   }
 
   if (!SY.on) {
